@@ -21,7 +21,7 @@ dt_atc = fread("../data/MelbDatathon2017/Lookups/ATC_LookUp.txt")
 
 # illness -----------------------------------------------------------------
 
-dt_ilness = fread("..data/MelbDatathon2017/Lookups/ChronicIllness_LookUp.txt")
+dt_ilness = fread("../data/MelbDatathon2017/Lookups/ChronicIllness_LookUp.txt")
 dt_ilness[, !c("MasterProductFullName"), with = F]
 
 # drug --------------------------------------------------------------------
