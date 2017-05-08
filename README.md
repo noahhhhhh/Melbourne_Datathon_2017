@@ -34,5 +34,9 @@ The task is to predict the probability that a patient will be dispensed a drug r
   # Cross-Validation
   - Time-based
     - previous years predict this year
-    - last year predicts this year
+    - or last year predicts this year
+    - then CV or hold out all patients
+  - Standard CV
+    - Train on all patients pre 2016
+    - Validate on Patient_ID 1 - 279200
     
