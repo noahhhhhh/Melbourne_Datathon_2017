@@ -8,6 +8,9 @@ The task is to predict the probability that a patient will be dispensed a drug r
 - Census
 
 # Features
+- Overall Transition to Diabetes
+  - What drugs would lead to diabetes
+  - What illnesses would lead to diabetes
 - I_Diabetes_Before
   - Whether a patient had diabetes drug before 2016
 - Drug Association
@@ -27,11 +30,11 @@ The task is to predict the probability that a patient will be dispensed a drug r
 - Ratio of Reclaim Amount
   - GovernmentReclaim_Amt / (PatientPrice_Amt + WholeSalePrice_Amt)
   
-  # Models
+# Models
   - Non-Diabetes Patients turning Diabetes Model
   - Existing Diabetes Patient Lapsing Model
   
-  # Cross-Validation
+# Cross-Validation
   - Time-based
     - previous years predict this year
     - or last year predicts this year
