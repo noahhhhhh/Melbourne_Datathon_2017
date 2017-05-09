@@ -3,7 +3,7 @@ featureEngineer_days_till_end_illness = function(dt, dt_raw, illnesses, trainEnd
   
   for(ill in illnesses){
     
-    dt_days_till_end__illness = dt[ChronicIllness == ill, .(Max_Dispense_Week = as.numeric(max(Dispense_Week) - as.Date(trainEndDate)) / 7), by = Patient_ID]
+    dt_days_till_end__illness = dt[ChronicIllness == ill, .(Max_Dispense_Week = as.numeric(as.Date(trainEndDate) - max(Dispense_Week)) / 7), by = Patient_ID]
     dt_raw = merge(dt_raw, dt_days_till_end__illness, by = "Patient_ID", all.x = T)
     setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("Days_till_End_Illness_", gsub(" |-", "_", ill))))
     
@@ -161,7 +161,7 @@ featureEngineer = function(dt, trainEndDate = "2015-01-01"){
   
   # Days_till_End
   print(paste0("[", Sys.time(), "]: ", "    - Days_till_End ..."))
-  dt_days_till_end = dt[, .(Max_Dispense_Week = as.numeric(max(Dispense_Week) - as.Date(trainEndDate)) / 7), by = Patient_ID]
+  dt_days_till_end = dt[, .(Max_Dispense_Week = as.numeric(as.Date(trainEndDate) - max(Dispense_Week)) / 7), by = Patient_ID]
   dt_raw = merge(dt_raw, dt_days_till_end, by = "Patient_ID", all.x = T)
   print(dim(dt_raw))
   
