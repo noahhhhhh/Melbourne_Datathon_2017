@@ -25,31 +25,52 @@ The task is to predict the probability that a patient will be dispensed a drug r
 - Other Chronic Illness
   - Number of transactions associated with an illness
   - Number of prescription associated with an illness
-  - NUmber of distinct drugs associated with an illness
+  - Number of distinct drugs associated with an illness
   - Time-weighted value for an illness
     - More recent illness txn has bigger value
 - Ratio of Reclaim Amount
   - GovernmentReclaim_Amt / (PatientPrice_Amt + WholeSalePrice_Amt)
  
 ## Non-key Features
-- Date
-  - Tenure_Total (need normalisation)
-  - Tenure_Chronic (continuous tenure treating chronic illnesses, need normalisation)
-  - Tenure_NonChronic (continuous tenure treating non-chronic illnesses, need normalisation)
-  - Tenure_Illness_Diabetes, COPD, Hyper Tension, etc. (continuous tenure treating am illness, need normalisation)
-  - Shopping_Density (most of txns in a short period, or txns are well dristributed over time?)
-  - Avg_Days_between_Prescription_Dispense
+- Date [Done]
+  - Tenure_Total [Done]
+    - Tenure_Total_Dispense
+    - Tenure_Total_Prescription
+    - Tenure_Chronic (continuous tenure treating chronic illnesses)
+    - Tenure_NonChronic (continuous tenure treating non-chronic illnesses)
+    - Tenure_Illness_Diabetes, COPD, Hyper Tension, etc. (continuous tenure treating an illness)
+    - Tenure_per_Prescription
+      - Avg
+      - Max
+    - Tenure_per_Drug
+      - Avg
+      - Max
+  - Shopping_Density (most of txns in a short period, or txns are well dristributed over time?) [Done]
+    - Shopping_Density_Illness_Diabetes, COPD, Hyper Tension, etc.
+  - Avg_Days_between_Prescription_Dispense [Done]
+    - Avg_Days_between_Prescription_Dispense_Illness
+  - Days_till_End [Done]
+    - Days_till_End_Illness
 - Basic Txn
-  - No_Txns (need normalisation)
-  - No_Drugs (need normalisation)
-  - No_Illnesses (need normalisation)
-  - No_Drugs_for_Illness_Diabetes, COPD, Hyper Tension, etc. (need normalisation)
-  - No_Txns_for_Illness_Diabetes, COPD, Hyper Tension, etc. (need normalisation)
-  - No_Repeats (need normalisation)
-  - No_Repeats_for_Illness_Diabetes, COPD, Hyper Tension, etc. (need normalisation)
-  - No_Prescription (need normalisation)
-  - No_Prescription_for_Illness_Diabetes, COPD, Hyper Tension, etc. (need normalisation)
-  - Avg_No_Drugs_per_Precription (need normalisation)
+  - No_Txns [Done]
+  - No_Drugs [Done]
+  - No_Illnesses [Done]
+  - No_Prescriptions [Done]
+  - No_Prescribers
+  - No_Stores
+  - No_Txns_for_Illness_Diabetes, COPD, Hyper Tension, etc.
+  - No_Drugs_for_Illness_Diabetes, COPD, Hyper Tension, etc.
+  - No_Prescriptions_for_Illness_Diabetes, COPD, Hyper Tension, etc.
+  - No_Prescribers_for_Illness_Diabetes, COPD, Hyper Tension, etc.
+  - No_Stores_for_Illness_Diabetes, COPD, Hyper Tension, etc.
+  - No_Repeats
+  - No_Repeats_for_Illness_Diabetes, COPD, Hyper Tension, etc.
+  - No_Repeats_per_Prescription
+    - Avg
+    - Max
+  - No_Drugs_per_Precription
+    - Avg
+    - Max
   
 # Models
   - Non-Diabetes Patients turning Diabetes Model
