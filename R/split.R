@@ -1,5 +1,5 @@
 
-splitData_TimeBased = function(dt_txn, trainEndDate = "2015-01-01", testEndDate = NULL, splitRatio = c(.4, .1, .5)){
+splitData_TimeBased = function(dt_txn, trainEndDate = "2015-01-01", testEndDate = NULL, splitRatio = NULL){
   print(paste0("[", Sys.time(), "]: ", "splitData_TimeBased ..."))
   require(caret)
   
@@ -34,17 +34,16 @@ splitData_TimeBased = function(dt_txn, trainEndDate = "2015-01-01", testEndDate 
   if(sum(splitRatio) != 1) stop("Sum of spliRatio must equal 1")
   y_all = dt_label_pre$Target
   dt_txn_pre[, Target := NULL]
-  
   if(length(splitRatio) == 2){
     
     splitRatio_train = splitRatio[1]
-    splitRatio_test = splitRatio[2]
+    splitRatio_valid = splitRatio[2]
     
     # createDataPartition
-    ind_test = createDataPartition(y_all, p = splitRatio_test, list = F)
-    dt_test_label = dt_label_pre[ind_test]
-    dt_train_label = dt_label_pre[-ind_test]
-    dt_valid_label = data.table()
+    ind_valid = createDataPartition(y_all, p = splitRatio_valid, list = F)
+    dt_valid_label = dt_label_pre[ind_valid]
+    dt_train_label = dt_label_pre[-ind_valid]
+    dt_test_label = data.table()
     
   }else{
     
@@ -62,11 +61,11 @@ splitData_TimeBased = function(dt_txn, trainEndDate = "2015-01-01", testEndDate 
   }
   
   dt_train = merge(dt_txn_pre, dt_train_label, by = "Patient_ID")
-  dt_test = merge(dt_txn_pre, dt_test_label, by = "Patient_ID")
-  if(length(dt_valid_label) != 0){
-    dt_valid = merge(dt_txn_pre, dt_valid_label, by = "Patient_ID")
+  dt_valid = merge(dt_txn_pre, dt_valid_label, by = "Patient_ID")
+  if(length(dt_test_label) != 0){
+    dt_test = merge(dt_txn_pre, dt_test_label, by = "Patient_ID")
   }else{
-    dt_valid = data.table()
+    dt_test = data.table()
   }
   
   print(paste("dt_train:", dim(dt_train)))
@@ -77,5 +76,3 @@ splitData_TimeBased = function(dt_txn, trainEndDate = "2015-01-01", testEndDate 
               , dt_valid = dt_valid
               , dt_test = dt_test))
 }
-
-

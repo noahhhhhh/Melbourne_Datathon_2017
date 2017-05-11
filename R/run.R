@@ -4,7 +4,8 @@ print(paste0("[", Sys.time(), "]: ", "Load ..."))
 
 source("R/split.R")
 source("R/featureEngineer.R")
-
+source("R/preprocess.R")
+source("R/model.R")
 
 # config ------------------------------------------------------------------
 
@@ -12,7 +13,7 @@ source("R/featureEngineer.R")
 config = list()
 config$trainEndDate = "2015-01-01"
 config$testEndDate = "2016-01-01"
-config$splitRatio = c(.4, .1, .5)
+config$splitRatio = c(.8, .2)
 
 
 
@@ -29,5 +30,24 @@ ls_dt = splitData_TimeBased(dt_txn
 # feature engineering -----------------------------------------------------
 
 
-dt_valid_eng = featureEngineer(ls_dt$dt_valid
-                               , trainEndDate = config$trainEndDate)
+dt_train_eng = featureEngineer(ls_dt$dt_train, trainEndDate = config$trainEndDate)
+
+dt_valid_eng = featureEngineer(ls_dt$dt_valid, trainEndDate = config$trainEndDate)
+
+# dt_test_eng = featureEngineer(ls_dt$dt_test, trainEndDate = config$trainEndDate)
+
+
+
+# preprocess --------------------------------------------------------------
+
+
+dt_train_eng_prep = preprocess(dt_train_eng, impute_to_0 = T, normalisation = T, crossEntropy = T)
+dt_valid_eng_prep = preprocess(dt_valid_eng, impute_to_0 = T, normalisation = T, crossEntropy = T)
+# dt_test_eng_prep = preprocess(dt_test_eng, impute_to_0 = T, normalisation = T, crossEntropy = T)
+
+
+
+# model -------------------------------------------------------------------
+
+model_xgb = model(dt_train_eng_prep, dt_valid_eng_prep, modelType = "xgboost")
+# [73]	train-auc:0.971862	valid-auc:0.969310
