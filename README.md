@@ -23,16 +23,17 @@ The task is to predict the probability that a patient will be dispensed a drug r
 - I_Qualified_PBSFree
   - Whether a patient was qualified for PBS free
 - Other Chronic Illness
-  - Number of transactions associated with an illness
-  - Number of prescription associated with an illness
-  - Number of distinct drugs associated with an illness
+  - Number of transactions associated with an illness [Done]
+  - Number of prescription associated with an illness [Done]
+  - Number of distinct drugs associated with an illness [Done]
   - Time-weighted value for an illness
     - More recent illness txn has bigger value
-- Ratio of Reclaim Amount
-  - GovernmentReclaim_Amt / (PatientPrice_Amt + WholeSalePrice_Amt)
+- Ratio of Reclaim Amount [Done]
+  - GovernmentReclaim_Amt / (PatientPrice_Amt + WholeSalePrice_Amt) [Done]
+  - by Illness [Done]
  
 ## Non-key Features
-- Date [Done]
+- Date
   - Tenure_Total [Done]
     - Tenure_Total_Dispense
     - Tenure_Total_Prescription
@@ -51,27 +52,64 @@ The task is to predict the probability that a patient will be dispensed a drug r
     - Avg_Days_between_Prescription_Dispense_Illness
   - Days_till_End [Done]
     - Days_till_End_Illness
-- Basic Txn
+  - IPI
+    - mean
+    - sd
+    - slope
+- Basic Txn [Done]
   - No_Txns [Done]
   - No_Drugs [Done]
   - No_Illnesses [Done]
   - No_Prescriptions [Done]
-  - No_Prescribers
-  - No_Stores
-  - No_Txns_for_Illness_Diabetes, COPD, Hyper Tension, etc.
-  - No_Drugs_for_Illness_Diabetes, COPD, Hyper Tension, etc.
-  - No_Prescriptions_for_Illness_Diabetes, COPD, Hyper Tension, etc.
-  - No_Prescribers_for_Illness_Diabetes, COPD, Hyper Tension, etc.
-  - No_Stores_for_Illness_Diabetes, COPD, Hyper Tension, etc.
-  - No_Repeats
-  - No_Repeats_for_Illness_Diabetes, COPD, Hyper Tension, etc.
-  - No_Repeats_per_Prescription
-    - Avg
-    - Max
-  - No_Drugs_per_Precription
-    - Avg
-    - Max
-  
+  - No_Prescribers [Done]
+  - No_Stores [Done]
+  - No_DeferredScript [Done]
+  - No_Repeats [Done]
+  - No_Txns_for_Illness_Diabetes, COPD, Hyper Tension, etc. [Done]
+  - No_Drugs_for_Illness_Diabetes, COPD, Hyper Tension, etc. [Done]
+  - No_Prescriptions_for_Illness_Diabetes, COPD, Hyper Tension, etc. [Done]
+  - No_Prescribers_for_Illness_Diabetes, COPD, Hyper Tension, etc. [Done]
+  - No_Stores_for_Illness_Diabetes, COPD, Hyper Tension, etc. [Done]
+  - No_DeferredScript_Illness_Diabetes, COPD, Hyper Tension, etc. [Done]
+  - No_Repeats_for_Illness_Diabetes, COPD, Hyper Tension, etc. [Done]
+  - No_Repeats_per_Prescription [Done]
+    - Avg [Done]
+    - Max [Done]
+  - No_Drugs_per_Precription [Done]
+    - Avg [Done]
+    - Max [Done]
+- ATC
+  - Refactor (substring)
+  - No_ATC_1, 2, ..., 5
+    - Refactor level
+    - Raw level
+  - Most_ATC_1, 2, ..., 5
+    - Refactor level
+    - Raw level
+  - Tenure_ATC_1, 2, ..., 5
+    - Refactor level
+    - Most_ATC_1, 2, ..., 5
+  - No_Txns_ATC_1, 2, ..., 5
+    - Refactor level
+    - Most_ATC_1, 2, ..., 5
+  - No_Drugs_ATC_1, 2, ..., 5
+    - Refactor level
+    - Most_ATC_1, 2, ..., 5
+  - No_Illnesses_ATC_1, 2, ..., 5
+    - Refactor level
+    - Most_ATC_1, 2, ..., 5
+  - Cross-Entropy (remember to avoid overfit)
+    - Refactor level
+    - Raw level
+- Drug
+- Patient
+- Store
+
+# Preprocess
+  - Impute NAs and Infs
+  - Normalisation
+  - Cross-Entropy between Categorical Features and Target
+  - 
 # Models
   - Non-Diabetes Patients turning Diabetes Model
   - Existing Diabetes Patient Lapsing Model
