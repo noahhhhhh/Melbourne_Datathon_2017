@@ -1,3 +1,199 @@
+## featureEngineer_atc ##
+featureEngineer_atc = function(dt, dt_raw, dt_atc_level){
+  
+  # ATCLevel5Code_Sub
+  print(paste0("[", Sys.time(), "]: ", "      - ATCLevel5Code_Sub ..."))
+  for(a5_sub in unique(dt_atc_level$ATCLevel5Code_Sub)){
+    
+    dt_no_txns_a5_sub = dt[ATCLevel5Code_Sub == a5_sub, (No_ATC5_Sub = .N), by = Patient_ID]
+    dt_tenure_a5_sub = dt[ATCLevel5Code_Sub == a5_sub, .(Tenure_ATC5_Sub = (as.numeric(max(Dispense_Week) - min(Dispense_Week)) / 7)), by = Patient_ID]
+    dt_no_drugs_a5_sub = dt[ATCLevel5Code_Sub == a5_sub, .N, by = .(Patient_ID, Drug_ID)][, .(No_Drugs_ATC5_Sub = .N), by = Patient_ID]
+    dt_no_illnesses_a5_sub = dt[ATCLevel5Code_Sub == a5_sub, .N, by = .(Patient_ID, ChronicIllness)][, .(No_Illnesses_ATC5_Sub = .N), by = Patient_ID]
+    
+    
+    dt_raw = merge(dt_raw, dt_no_txns_a5_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Txns_ATC5_Sub_", gsub(" |-", "_", a5_sub))))
+    dt_raw = merge(dt_raw, dt_tenure_a5_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("Tenure_ATC5_Sub_", gsub(" |-", "_", a5_sub))))
+    dt_raw = merge(dt_raw, dt_no_drugs_a5_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Drugs_ATC5_Sub_", gsub(" |-", "_", a5_sub))))
+    dt_raw = merge(dt_raw, dt_no_illnesses_a5_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Illnesses_ATC5_Sub_", gsub(" |-", "_", a5_sub))))
+    
+  }
+  
+  # ATCLevel4Code_Sub
+  print(paste0("[", Sys.time(), "]: ", "      - ATCLevel4Code_Sub ..."))
+  for(a4_sub in unique(dt_atc_level$ATCLevel4Code_Sub)){
+    
+    dt_no_txns_a4_sub = dt[ATCLevel4Code_Sub == a4_sub, (No_ATC4_Sub = .N), by = Patient_ID]
+    dt_tenure_a4_sub = dt[ATCLevel4Code_Sub == a4_sub, .(Tenure_ATC4_Sub = (as.numeric(max(Dispense_Week) - min(Dispense_Week)) / 7)), by = Patient_ID]
+    dt_no_drugs_a4_sub = dt[ATCLevel4Code_Sub == a4_sub, .N, by = .(Patient_ID, Drug_ID)][, .(No_Drugs_ATC4_Sub = .N), by = Patient_ID]
+    dt_no_illnesses_a4_sub = dt[ATCLevel4Code_Sub == a4_sub, .N, by = .(Patient_ID, ChronicIllness)][, .(No_Illnesses_ATC4_Sub = .N), by = Patient_ID]
+    
+    
+    dt_raw = merge(dt_raw, dt_no_txns_a4_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Txns_ATC4_Sub_", gsub(" |-", "_", a4_sub))))
+    dt_raw = merge(dt_raw, dt_tenure_a4_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("Tenure_ATC4_Sub_", gsub(" |-", "_", a4_sub))))
+    dt_raw = merge(dt_raw, dt_no_drugs_a4_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Drugs_ATC4_Sub_", gsub(" |-", "_", a4_sub))))
+    dt_raw = merge(dt_raw, dt_no_illnesses_a4_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Illnesses_ATC4_Sub_", gsub(" |-", "_", a4_sub))))
+    
+  }
+  
+  # ATCLevel3Code_Sub
+  print(paste0("[", Sys.time(), "]: ", "      - ATCLevel3Code_Sub ..."))
+  for(a3_sub in unique(dt_atc_level$ATCLevel3Code_Sub)){
+    
+    dt_no_txns_a3_sub = dt[ATCLevel3Code_Sub == a3_sub, (No_ATC3_Sub = .N), by = Patient_ID]
+    dt_tenure_a3_sub = dt[ATCLevel3Code_Sub == a3_sub, .(Tenure_ATC3_Sub = (as.numeric(max(Dispense_Week) - min(Dispense_Week)) / 7)), by = Patient_ID]
+    dt_no_drugs_a3_sub = dt[ATCLevel3Code_Sub == a3_sub, .N, by = .(Patient_ID, Drug_ID)][, .(No_Drugs_ATC3_Sub = .N), by = Patient_ID]
+    dt_no_illnesses_a3_sub = dt[ATCLevel3Code_Sub == a3_sub, .N, by = .(Patient_ID, ChronicIllness)][, .(No_Illnesses_ATC3_Sub = .N), by = Patient_ID]
+    
+    
+    dt_raw = merge(dt_raw, dt_no_txns_a3_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Txns_ATC3_Sub_", gsub(" |-", "_", a3_sub))))
+    dt_raw = merge(dt_raw, dt_tenure_a3_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("Tenure_ATC3_Sub_", gsub(" |-", "_", a3_sub))))
+    dt_raw = merge(dt_raw, dt_no_drugs_a3_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Drugs_ATC3_Sub_", gsub(" |-", "_", a3_sub))))
+    dt_raw = merge(dt_raw, dt_no_illnesses_a3_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Illnesses_ATC3_Sub_", gsub(" |-", "_", a3_sub))))
+    
+  }
+  
+  # ATCLevel2Code_Sub
+  print(paste0("[", Sys.time(), "]: ", "      - ATCLevel2Code_Sub ..."))
+  for(a2_sub in unique(dt_atc_level$ATCLevel2Code_Sub)){
+    
+    dt_no_txns_a2_sub = dt[ATCLevel2Code_Sub == a2_sub, (No_ATC2_Sub = .N), by = Patient_ID]
+    dt_tenure_a2_sub = dt[ATCLevel2Code_Sub == a2_sub, .(Tenure_ATC2_Sub = (as.numeric(max(Dispense_Week) - min(Dispense_Week)) / 7)), by = Patient_ID]
+    dt_no_drugs_a2_sub = dt[ATCLevel2Code_Sub == a2_sub, .N, by = .(Patient_ID, Drug_ID)][, .(No_Drugs_ATC2_Sub = .N), by = Patient_ID]
+    dt_no_illnesses_a2_sub = dt[ATCLevel2Code_Sub == a2_sub, .N, by = .(Patient_ID, ChronicIllness)][, .(No_Illnesses_ATC2_Sub = .N), by = Patient_ID]
+    
+    
+    dt_raw = merge(dt_raw, dt_no_txns_a2_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Txns_ATC2_Sub_", gsub(" |-", "_", a2_sub))))
+    dt_raw = merge(dt_raw, dt_tenure_a2_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("Tenure_ATC2_Sub_", gsub(" |-", "_", a2_sub))))
+    dt_raw = merge(dt_raw, dt_no_drugs_a2_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Drugs_ATC2_Sub_", gsub(" |-", "_", a2_sub))))
+    dt_raw = merge(dt_raw, dt_no_illnesses_a2_sub, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Illnesses_ATC2_Sub_", gsub(" |-", "_", a2_sub))))
+    
+  }
+  
+  # ATCLevel5Code_Raw
+  print(paste0("[", Sys.time(), "]: ", "      - ATCLevel5Code_Raw ..."))
+  for(a5 in unique(dt_atc_level$ATCLevel5Code)){
+    
+    dt_no_txns_a5_raw = dt[ATCLevel5Code == a5, (No_Txns_ATC5_Raw = .N), by = Patient_ID]
+    dt_tenure_a5_raw = dt[ATCLevel5Code == a5, .(Tenure_ATC5_Raw = (as.numeric(max(Dispense_Week) - min(Dispense_Week)) / 7)), by = Patient_ID]
+    dt_no_drugs_a5_raw = dt[ATCLevel5Code == a5, .N, by = .(Patient_ID, Drug_ID)][, .(No_Drugs_ATC5_Raw = .N), by = Patient_ID]
+    dt_no_illnesses_a5_raw = dt[ATCLevel5Code == a5, .N, by = .(Patient_ID, ChronicIllness)][, .(No_Illnesses_ATC5_Raw = .N), by = Patient_ID]
+    
+    
+    dt_raw = merge(dt_raw, dt_no_txns_a5_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Txns_ATC5_Raw_", gsub(" |-", "_", a5))))
+    dt_raw = merge(dt_raw, dt_tenure_a5_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("Tenure_ATC5_Raw_", gsub(" |-", "_", a5))))
+    dt_raw = merge(dt_raw, dt_no_drugs_a5_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Drugs_ATC5_Raw_", gsub(" |-", "_", a5))))
+    dt_raw = merge(dt_raw, dt_no_illnesses_a5_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Illnesses_ATC5_Raw_", gsub(" |-", "_", a5))))
+    
+  }
+  
+  # ATCLevel4Code_Raw
+  print(paste0("[", Sys.time(), "]: ", "      - ATCLevel4Code_Raw ..."))
+  for(a4 in unique(dt_atc_level$ATCLevel4Code)){
+    
+    dt_no_txns_a4_raw = dt[ATCLevel4Code == a4, (No_Txns_ATC4_Raw = .N), by = Patient_ID]
+    dt_tenure_a4_raw = dt[ATCLevel4Code == a4, .(Tenure_ATC4_Raw = (as.numeric(max(Dispense_Week) - min(Dispense_Week)) / 7)), by = Patient_ID]
+    dt_no_drugs_a4_raw = dt[ATCLevel4Code == a4, .N, by = .(Patient_ID, Drug_ID)][, .(No_Drugs_ATC4_Raw = .N), by = Patient_ID]
+    dt_no_illnesses_a4_raw = dt[ATCLevel4Code == a4, .N, by = .(Patient_ID, ChronicIllness)][, .(No_Illnesses_ATC4_Raw = .N), by = Patient_ID]
+    
+    
+    dt_raw = merge(dt_raw, dt_no_txns_a4_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Txns_ATC4_Raw_", gsub(" |-", "_", a4))))
+    dt_raw = merge(dt_raw, dt_tenure_a4_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("Tenure_ATC4_Raw_", gsub(" |-", "_", a4))))
+    dt_raw = merge(dt_raw, dt_no_drugs_a4_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Drugs_ATC4_Raw_", gsub(" |-", "_", a4))))
+    dt_raw = merge(dt_raw, dt_no_illnesses_a4_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Illnesses_ATC4_Raw_", gsub(" |-", "_", a4))))
+    
+  }
+  
+  # ATCLevel3Code_Raw
+  print(paste0("[", Sys.time(), "]: ", "      - ATCLevel3Code_Raw ..."))
+  for(a3 in unique(dt_atc_level$ATCLevel3Code)){
+    
+    dt_no_txns_a3_raw = dt[ATCLevel3Code == a3, (No_Txns_ATC3_Raw = .N), by = Patient_ID]
+    dt_tenure_a3_raw = dt[ATCLevel3Code == a3, .(Tenure_ATC3_Raw = (as.numeric(max(Dispense_Week) - min(Dispense_Week)) / 7)), by = Patient_ID]
+    dt_no_drugs_a3_raw = dt[ATCLevel3Code == a3, .N, by = .(Patient_ID, Drug_ID)][, .(No_Drugs_ATC3_Raw = .N), by = Patient_ID]
+    dt_no_illnesses_a3_raw = dt[ATCLevel3Code == a3, .N, by = .(Patient_ID, ChronicIllness)][, .(No_Illnesses_ATC3_Raw = .N), by = Patient_ID]
+    
+    
+    dt_raw = merge(dt_raw, dt_no_txns_a3_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Txns_ATC3_Raw_", gsub(" |-", "_", a3))))
+    dt_raw = merge(dt_raw, dt_tenure_a3_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("Tenure_ATC3_Raw_", gsub(" |-", "_", a3))))
+    dt_raw = merge(dt_raw, dt_no_drugs_a3_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Drugs_ATC3_Raw_", gsub(" |-", "_", a3))))
+    dt_raw = merge(dt_raw, dt_no_illnesses_a3_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Illnesses_ATC3_Raw_", gsub(" |-", "_", a3))))
+    
+  }
+  
+  # ATCLevel2Code_Raw
+  print(paste0("[", Sys.time(), "]: ", "      - ATCLevel2Code_Raw ..."))
+  for(a2 in unique(dt_atc_level$ATCLevel2Code)){
+    
+    dt_no_txns_a2_raw = dt[ATCLevel2Code == a2, (No_Txns_ATC2_Raw = .N), by = Patient_ID]
+    dt_tenure_a2_raw = dt[ATCLevel2Code == a2, .(Tenure_ATC2_Raw = (as.numeric(max(Dispense_Week) - min(Dispense_Week)) / 7)), by = Patient_ID]
+    dt_no_drugs_a2_raw = dt[ATCLevel2Code == a2, .N, by = .(Patient_ID, Drug_ID)][, .(No_Drugs_ATC2_Raw = .N), by = Patient_ID]
+    dt_no_illnesses_a2_raw = dt[ATCLevel2Code == a2, .N, by = .(Patient_ID, ChronicIllness)][, .(No_Illnesses_ATC2_Raw = .N), by = Patient_ID]
+    
+    
+    dt_raw = merge(dt_raw, dt_no_txns_a2_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Txns_ATC2_Raw_", gsub(" |-", "_", a2))))
+    dt_raw = merge(dt_raw, dt_tenure_a2_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("Tenure_ATC2_Raw_", gsub(" |-", "_", a2))))
+    dt_raw = merge(dt_raw, dt_no_drugs_a2_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Drugs_ATC2_Raw_", gsub(" |-", "_", a2))))
+    dt_raw = merge(dt_raw, dt_no_illnesses_a2_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Illnesses_ATC2_Raw_", gsub(" |-", "_", a2))))
+    
+  }
+  
+  # ATCLevel1Code_Raw
+  print(paste0("[", Sys.time(), "]: ", "      - ATCLevel1Code_Raw ..."))
+  for(a1 in unique(dt_atc_level$ATCLevel1Code)){
+    
+    dt_no_txns_a1_raw = dt[ATCLevel1Code == a1, (No_Txns_ATC1_Raw = .N), by = Patient_ID]
+    dt_tenure_a1_raw = dt[ATCLevel1Code == a1, .(Tenure_ATC1_Raw = (as.numeric(max(Dispense_Week) - min(Dispense_Week)) / 7)), by = Patient_ID]
+    dt_no_drugs_a1_raw = dt[ATCLevel1Code == a1, .N, by = .(Patient_ID, Drug_ID)][, .(No_Drugs_ATC1_Raw = .N), by = Patient_ID]
+    dt_no_illnesses_a1_raw = dt[ATCLevel1Code == a1, .N, by = .(Patient_ID, ChronicIllness)][, .(No_Illnesses_ATC1_Raw = .N), by = Patient_ID]
+    
+    
+    dt_raw = merge(dt_raw, dt_no_txns_a1_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Txns_ATC1_Raw_", gsub(" |-", "_", a1))))
+    dt_raw = merge(dt_raw, dt_tenure_a1_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("Tenure_ATC1_Raw_", gsub(" |-", "_", a1))))
+    dt_raw = merge(dt_raw, dt_no_drugs_a1_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Drugs_ATC1_Raw_", gsub(" |-", "_", a1))))
+    dt_raw = merge(dt_raw, dt_no_illnesses_a1_raw, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("No_Illnesses_ATC1_Raw_", gsub(" |-", "_", a1))))
+    
+  }
+  
+  return(dt_raw)
+  
+}
+
 ## No_Txns_for_Illness ##
 featureEngineer_basic_txn_illness = function(dt, dt_raw, illnesses){
   
@@ -111,7 +307,7 @@ featureEngineer_shopping_density_illness = function(dt, dt_raw, illnesses){
 }
 
 
-featureEngineer = function(dt, trainEndDate = "2015-01-01", dt_drug){
+featureEngineer = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_atc){
   print(paste0("[", Sys.time(), "]: ", "Feature Engineering ..."))
   print(dim(dt))
   
@@ -131,6 +327,149 @@ featureEngineer = function(dt, trainEndDate = "2015-01-01", dt_drug){
   print(paste0("[", Sys.time(), "]: ", "    - illnesses ..."))
   illnesses = c("Hypertension", "Depression", "COPD", "Lipids", "Heart Failure", "Immunology", "Urology"
                 , "Epilepsy", "Diabetes", "Anti-Coagulant", "Osteoporosis")
+  
+  # atc ---------------------------------------------------------------------
+  
+  print(paste0("[", Sys.time(), "]: ", "  - ATC Features ..."))
+  # txn level
+  dt = merge(dt, dt_drug[, .(MasterProductID, ATCLevel1Code, ATCLevel2Code, ATCLevel3Code, ATCLevel4Code, ATCLevel5Code)]
+             , by.x = "Drug_ID", by.y = "MasterProductID")
+  
+  
+  dt[, ATCLevel5Code_Sub := ifelse(nchar(ATCLevel4Code) == nchar(ATCLevel3Code), ATCLevel3Code
+                                   , ifelse(nchar(ATCLevel4Code) == nchar(ATCLevel5Code), ATCLevel4Code
+                                            , substr(ATCLevel5Code, 6, 7)))]
+  dt[, ATCLevel4Code_Sub := ifelse(nchar(ATCLevel4Code) == nchar(ATCLevel3Code), ATCLevel3Code, substr(ATCLevel4Code, 5, 5))]
+  dt[, ATCLevel3Code_Sub := substr(ATCLevel3Code, 4, 4)]
+  dt[, ATCLevel2Code_Sub := substr(ATCLevel2Code, 2, 3)]
+  
+  # atc level
+  dt_atc_level = dt_atc[, .(ATCLevel1Code, ATCLevel2Code, ATCLevel3Code, ATCLevel4Code, ATCLevel5Code)]
+  dt_atc_level[, ATCLevel5Code_Sub := ifelse(nchar(ATCLevel4Code) == nchar(ATCLevel3Code), ATCLevel3Code
+                                             , ifelse(nchar(ATCLevel4Code) == nchar(ATCLevel5Code), ATCLevel4Code
+                                                      , substr(ATCLevel5Code, 6, 7)))]
+  dt_atc_level[, ATCLevel4Code_Sub := ifelse(nchar(ATCLevel4Code) == nchar(ATCLevel3Code), ATCLevel3Code, substr(ATCLevel4Code, 5, 5))]
+  dt_atc_level[, ATCLevel3Code_Sub := substr(ATCLevel3Code, 4, 4)]
+  dt_atc_level[, ATCLevel2Code_Sub := substr(ATCLevel2Code, 2, 3)]
+  
+  # No_ATC
+  print(paste0("[", Sys.time(), "]: ", "    - No_ATC ..."))
+  print(paste0("[", Sys.time(), "]: ", "      - No_ATC_Sub_5 ..."))
+  dt_no_a5_sub = dt[, .N, by = .(Patient_ID, ATCLevel5Code_Sub)][, .(No_ATC5_Sub = .N), by = Patient_ID]
+  dt_raw = merge(dt_raw, dt_no_a5_sub, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - No_ATC_Sub_4 ..."))
+  dt_no_a4_sub = dt[, .N, by = .(Patient_ID, ATCLevel4Code_Sub)][, .(No_ATC4_Sub = .N), by = Patient_ID]
+  dt_raw = merge(dt_raw, dt_no_a4_sub, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - No_ATC_Sub_3 ..."))
+  dt_no_a3_sub = dt[, .N, by = .(Patient_ID, ATCLevel3Code_Sub)][, .(No_ATC3_Sub = .N), by = Patient_ID]
+  dt_raw = merge(dt_raw, dt_no_a3_sub, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - No_ATC_Sub_2 ..."))
+  dt_no_a2_sub = dt[, .N, by = .(Patient_ID, ATCLevel2Code_Sub)][, .(No_ATC2_Sub = .N), by = Patient_ID]
+  dt_raw = merge(dt_raw, dt_no_a2_sub, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - No_ATC_Raw_5 ..."))
+  dt_no_a5_raw = dt[, .N, by = .(Patient_ID, ATCLevel5Code)][, .(No_ATC5_Raw = .N), by = Patient_ID]
+  dt_raw = merge(dt_raw, dt_no_a5_raw, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - No_ATC_Raw_4 ..."))
+  dt_no_a4_raw = dt[, .N, by = .(Patient_ID, ATCLevel4Code)][, .(No_ATC4_Raw = .N), by = Patient_ID]
+  dt_raw = merge(dt_raw, dt_no_a4_raw, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - No_ATC_Raw_3 ..."))
+  dt_no_a3_raw = dt[, .N, by = .(Patient_ID, ATCLevel3Code)][, .(No_ATC3_Raw = .N), by = Patient_ID]
+  dt_raw = merge(dt_raw, dt_no_a3_raw, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - No_ATC_Raw_2 ..."))
+  dt_no_a2_raw = dt[, .N, by = .(Patient_ID, ATCLevel2Code)][, .(No_ATC2_Raw = .N), by = Patient_ID]
+  dt_raw = merge(dt_raw, dt_no_a2_raw, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - No_ATC_1 ..."))
+  dt_no_a1 = dt[, .N, by = .(Patient_ID, ATCLevel1Code)][, .(No_ATC1_Raw = .N), by = Patient_ID]
+  dt_raw = merge(dt_raw, dt_no_a1, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  
+  # Max_No_ATC
+  print(paste0("[", Sys.time(), "]: ", "    - Max_ATC ..."))
+  print(paste0("[", Sys.time(), "]: ", "      - Max_ATC_Sub_5 ..."))
+  dt_max_txns_a5_sub = dt[, .N, by = .(Patient_ID, ATCLevel5Code_Sub)]
+  dt_max_txns_a5_sub[, rank := frankv(-N, ties.method = "first"), by = Patient_ID]
+  dt_max_txns_a5_sub = dt_max_txns_a5_sub[rank == 1, !c("rank", "N"), with = F]
+  dt_raw = merge(dt_raw, dt_max_txns_a5_sub, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - Max_ATC_Sub_4 ..."))
+  dt_max_txns_a4_sub = dt[, .N, by = .(Patient_ID, ATCLevel4Code_Sub)]
+  dt_max_txns_a4_sub[, rank := frankv(-N, ties.method = "first"), by = Patient_ID]
+  dt_max_txns_a4_sub = dt_max_txns_a4_sub[rank == 1, !c("rank", "N"), with = F]
+  dt_raw = merge(dt_raw, dt_max_txns_a4_sub, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - Max_ATC_Sub_3 ..."))
+  dt_max_txns_a3_sub = dt[, .N, by = .(Patient_ID, ATCLevel3Code_Sub)]
+  dt_max_txns_a3_sub[, rank := frankv(-N, ties.method = "first"), by = Patient_ID]
+  dt_max_txns_a3_sub = dt_max_txns_a3_sub[rank == 1, !c("rank", "N"), with = F]
+  dt_raw = merge(dt_raw, dt_max_txns_a3_sub, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - Max_ATC_Sub_2 ..."))
+  dt_max_txns_a2_sub = dt[, .N, by = .(Patient_ID, ATCLevel2Code_Sub)]
+  dt_max_txns_a2_sub[, rank := frankv(-N, ties.method = "first"), by = Patient_ID]
+  dt_max_txns_a2_sub = dt_max_txns_a2_sub[rank == 1, !c("rank", "N"), with = F]
+  dt_raw = merge(dt_raw, dt_max_txns_a2_sub, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - Max_ATC_Raw_5 ..."))
+  dt_max_txns_a5_raw = dt[, .N, by = .(Patient_ID, ATCLevel5Code)]
+  dt_max_txns_a5_raw[, rank := frankv(-N, ties.method = "first"), by = Patient_ID]
+  dt_max_txns_a5_raw = dt_max_txns_a5_raw[rank == 1, !c("rank", "N"), with = F]
+  dt_raw = merge(dt_raw, dt_max_txns_a5_raw, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - Max_ATC_Raw_4 ..."))
+  dt_max_txns_a4_raw = dt[, .N, by = .(Patient_ID, ATCLevel4Code)]
+  dt_max_txns_a4_raw[, rank := frankv(-N, ties.method = "first"), by = Patient_ID]
+  dt_max_txns_a4_raw = dt_max_txns_a4_raw[rank == 1, !c("rank", "N"), with = F]
+  dt_raw = merge(dt_raw, dt_max_txns_a4_raw, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - Max_ATC_Raw_3 ..."))
+  dt_max_txns_a3_raw = dt[, .N, by = .(Patient_ID, ATCLevel3Code)]
+  dt_max_txns_a3_raw[, rank := frankv(-N, ties.method = "first"), by = Patient_ID]
+  dt_max_txns_a3_raw = dt_max_txns_a3_raw[rank == 1, !c("rank", "N"), with = F]
+  dt_raw = merge(dt_raw, dt_max_txns_a3_raw, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - Max_ATC_Raw_2 ..."))
+  dt_max_txns_a2_raw = dt[, .N, by = .(Patient_ID, ATCLevel2Code)]
+  dt_max_txns_a2_raw[, rank := frankv(-N, ties.method = "first"), by = Patient_ID]
+  dt_max_txns_a2_raw = dt_max_txns_a2_raw[rank == 1, !c("rank", "N"), with = F]
+  dt_raw = merge(dt_raw, dt_max_txns_a2_raw, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  print(paste0("[", Sys.time(), "]: ", "      - Max_ATC_1 ..."))
+  dt_max_txns_a1_raw = dt[, .N, by = .(Patient_ID, ATCLevel1Code)]
+  dt_max_txns_a1_raw[, rank := frankv(-N, ties.method = "first"), by = Patient_ID]
+  dt_max_txns_a1_raw = dt_max_txns_a1_raw[rank == 1, !c("rank", "N"), with = F]
+  dt_raw = merge(dt_raw, dt_max_txns_a1_raw, by = "Patient_ID", all.x = T)
+  print(dim(dt_raw))
+  
+  # No...ATC
+  print(paste0("[", Sys.time(), "]: ", "    - No...ATC ..."))
+  dt_raw = featureEngineer_atc(dt, dt_raw, dt_atc_level)
+  print(dim(dt_raw))
+  
   
   # date --------------------------------------------------------------------
   
@@ -308,19 +647,7 @@ featureEngineer = function(dt, trainEndDate = "2015-01-01", dt_drug){
   dt_raw = merge(dt_raw, dt_no_drugs_per_prescription, by = "Patient_ID", all.x = T)
   print(dim(dt_raw))
   
-  # atc ---------------------------------------------------------------------
-  
-  print(paste0("[", Sys.time(), "]: ", "  - ATC Features ..."))
-  dt = merge(dt, dt_drug[, .(MasterProductID, ATCLevel1Code, ATCLevel2Code, ATCLevel3Code, ATCLevel4Code, ATCLevel5Code)]
-             , by.x = "Drug_ID", by.y = "MasterProductID")
-  
-  
-  dt[, ATCLevel5Code_Sub := ifelse(nchar(ATCLevel4Code) == nchar(ATCLevel3Code), ATCLevel3Code
-                               , ifelse(nchar(ATCLevel4Code) == nchar(ATCLevel5Code), ATCLevel4Code
-                                        , substr(ATCLevel5Code, 6, 7)))]
-  dt[, ATCLevel4Code_Sub := ifelse(nchar(ATCLevel4Code) == nchar(ATCLevel3Code), ATCLevel3Code, substr(ATCLevel4Code, 5, 5))]
-  dt[, ATCLevel3Code_Sub := substr(ATCLevel3Code, 4, 4)]
-  dt[, ATCLevel2Code_Sub := substr(ATCLevel2Code, 2, 3)]
+
   
   return(dt_raw)
 }

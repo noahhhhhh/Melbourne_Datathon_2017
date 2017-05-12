@@ -30,9 +30,9 @@ ls_dt = splitData_TimeBased(dt_txn
 # feature engineering -----------------------------------------------------
 
 
-dt_train_eng = featureEngineer(ls_dt$dt_train, trainEndDate = config$trainEndDate)
+dt_train_eng = featureEngineer(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
 
-dt_valid_eng = featureEngineer(ls_dt$dt_valid, trainEndDate = config$trainEndDate)
+dt_valid_eng = featureEngineer(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
 
 # dt_test_eng = featureEngineer(ls_dt$dt_test, trainEndDate = config$trainEndDate)
 
