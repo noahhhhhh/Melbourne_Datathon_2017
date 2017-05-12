@@ -79,25 +79,25 @@ The task is to predict the probability that a patient will be dispensed a drug r
     - Avg [Done]
     - Max [Done]
 - ATC
-  - Refactor (substring)
-  - No_ATC_1, 2, ..., 5
-    - Refactor level
-    - Raw level
-  - Most_ATC_1, 2, ..., 5
-    - Refactor level
-    - Raw level
-  - Tenure_ATC_1, 2, ..., 5
-    - Refactor level
-    - Most_ATC_1, 2, ..., 5
-  - No_Txns_ATC_1, 2, ..., 5
-    - Refactor level
-    - Most_ATC_1, 2, ..., 5
-  - No_Drugs_ATC_1, 2, ..., 5
-    - Refactor level
-    - Most_ATC_1, 2, ..., 5
-  - No_Illnesses_ATC_1, 2, ..., 5
-    - Refactor level
-    - Most_ATC_1, 2, ..., 5
+  - Refactor (substring) [Done]
+  - No_ATC_1, 2, ..., 5 [Done]
+    - Refactor level [Done]
+    - Raw level [Done]
+  - Max_ATC_1, 2, ..., 5 [Done]
+    - Refactor level [Done]
+    - Raw level [Done]
+  - Tenure_ATC_1, 2, ..., 5 [Done]
+    - Refactor level [Done]
+    - Max_ATC_1, 2, ..., 5 [Done]
+  - No_Txns_ATC_1, 2, ..., 5 [Done]
+    - Refactor level [Done]
+    - Max_ATC_1, 2, ..., 5 [Done]
+  - No_Drugs_ATC_1, 2, ..., 5 [Done]
+    - Refactor level [Done]
+    - Max_ATC_1, 2, ..., 5 [Done]
+  - No_Illnesses_ATC_1, 2, ..., 5 [Done]
+    - Refactor level [Done]
+    - Max_ATC_1, 2, ..., 5 [Done]
   - Cross-Entropy (remember to avoid overfit)
     - Refactor level
     - Raw level
