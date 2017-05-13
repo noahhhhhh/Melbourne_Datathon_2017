@@ -103,9 +103,9 @@ The task is to predict the probability that a patient will be dispensed a drug r
   - No_Illnesses_ATC_1, 2, ..., 5 [Done]
     - Refactor level [Done]
     - Max_ATC_1, 2, ..., 5 [Done]
-  - ATC_CrossEntropy
-    - Refactor level
-    - Raw level
+  - ATC_CrossEntropy [Done]
+    - Refactor level [Done]
+    - Raw level [Done]
 - Illness
   - Most_Common_Illness
   - Illness_CrossEntropy
