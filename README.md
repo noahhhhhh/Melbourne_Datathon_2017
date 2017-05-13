@@ -126,8 +126,9 @@ The task is to predict the probability that a patient will be dispensed a drug r
   - Target mean between Categorical Features and Target (remember to avoid overfit)
   
 # Models
-  - Non-Diabetes Patients turning Diabetes Model
-  - Existing Diabetes Patient Lapsing Model
+  - Non-Diabetes Patients --> Diabetes Model
+  - Existing Diabetes Patient --> Non-Diabetes Model
+  - Patients Lapsing Model
   
 # Cross-Validation
   - Time-based
