@@ -83,6 +83,7 @@ The task is to predict the probability that a patient will be dispensed a drug r
   - No_Drugs_per_Precription [Done]
     - Avg [Done]
     - Max [Done]
+
 - ATC
   - Refactor (substring) [Done]
   - No_ATC_1, 2, ..., 5 [Done]
@@ -108,8 +109,13 @@ The task is to predict the probability that a patient will be dispensed a drug r
     - Raw level [Done]
 - Illness
   - Most_Common_Illness
+  - Last_Illness
+  - First_Illness
   - Illness_CrossEntropy
 - Drug
+  - Most_Common_Drug
+  - Last_Drug
+  - First_Drug
   - Drug_CrossEntropy
   - PBS
 - Patient
