@@ -53,9 +53,14 @@ The task is to predict the probability that a patient will be dispensed a drug r
   - Days_till_End [Done]
     - Days_till_End_Illness
   - IPI
-    - mean
-    - sd
-    - slope
+    - IPI_Prescription
+    - IPI_Drug
+    - IPI_Illness
+      - mean
+      - sd
+      - median
+      - max
+      - min
 - Basic Txn [Done]
   - No_Txns [Done]
   - No_Drugs [Done]
@@ -98,18 +103,28 @@ The task is to predict the probability that a patient will be dispensed a drug r
   - No_Illnesses_ATC_1, 2, ..., 5 [Done]
     - Refactor level [Done]
     - Max_ATC_1, 2, ..., 5 [Done]
-  - Cross-Entropy (remember to avoid overfit)
+  - ATC_CrossEntropy
     - Refactor level
     - Raw level
+- Illness
+  - Most_Common_Illness
+  - Illness_CrossEntropy
 - Drug
+  - Drug_CrossEntropy
+  - PBS
 - Patient
+  - Dist_postcode
+    - mean
+    - sd
 - Store
+  - BannerGroup
+    - 
 
 # Preprocess
   - Impute NAs and Infs
   - Normalisation
-  - Cross-Entropy between Categorical Features and Target
-  - 
+  - Target mean between Categorical Features and Target (remember to avoid overfit)
+  
 # Models
   - Non-Diabetes Patients turning Diabetes Model
   - Existing Diabetes Patient Lapsing Model
