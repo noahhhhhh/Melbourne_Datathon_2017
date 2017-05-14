@@ -1,7 +1,9 @@
 
-splitData_TimeBased = function(dt_txn, trainEndDate = "2015-01-01", testEndDate = NULL, splitRatio = NULL){
+splitData_TimeBased = function(dt_txn, dt_ilness, trainEndDate = "2015-01-01", testEndDate = NULL, splitRatio = NULL){
+  
   print(paste0("[", Sys.time(), "]: ", "splitData_TimeBased ..."))
   require(caret)
+  require(data.table)
   
   if(is.null(testEndDate)) testEndDate = as.character(max(dt_txn$Dispense_Week) + 1)
   
@@ -76,3 +78,75 @@ splitData_TimeBased = function(dt_txn, trainEndDate = "2015-01-01", testEndDate 
               , dt_valid = dt_valid
               , dt_test = dt_test))
 }
+
+
+splitDate_TestSetBased = function(dt_txn, dt_ilness, splitRatio = NULL){
+  
+  print(paste0("[", Sys.time(), "]: ", "splitDate_TestSetBased ..."))
+  require(caret)
+  require(data.table)
+  
+  trainEndDate = "2016-01-01"
+
+  
+  
+  # merge illness -----------------------------------------------------------
+  
+  
+  dt_txn = merge(dt_txn, dt_ilness[, .(MasterProductID, ChronicIllness)], by.x = "Drug_ID", by.y = "MasterProductID", all.x = T)
+  dt_txn[is.na(ChronicIllness), ChronicIllness := "Non-Chronic"]
+  
+  
+  # pre and post 2014 -------------------------------------------------------
+  
+  
+  dt_txn_pre = dt_txn[Dispense_Week < as.Date(trainEndDate)]
+  dt_txn_pos = dt_txn[Dispense_Week >= as.Date(trainEndDate)]
+  
+  
+  # label targets -----------------------------------------------------------
+  
+  
+  dt_label = dt_txn_pos[, .(Target = any(ChronicIllness == "Diabetes")), by = .(Patient_ID)]
+  dt_label[, Target := ifelse(Target == T, 1, 0)]
+  dt_txn_pre = merge(dt_txn_pre, dt_label, by = "Patient_ID", all.x = T)
+  dt_txn_pre[is.na(Target), Target := 0]
+  dt_label_pre = dt_txn_pre[, .(Target = max(Target)), by = Patient_ID]
+  
+  
+  # test set ----------------------------------------------------------------
+  
+  
+  dt_test = dt_txn_pre[Patient_ID >= 279201]
+  
+  
+  # stratified sampling train, valid, and test ------------------------------
+  
+  if(sum(splitRatio) != 1) stop("Sum of spliRatio must equal 1")
+  y_all = dt_label_pre[Patient_ID < 279201]$Target
+  
+  dt_txn_pre[, Target := NULL]
+
+  splitRatio_train = splitRatio[1]
+  splitRatio_valid = splitRatio[2]
+  
+  # createDataPartition
+  ind_valid = createDataPartition(y_all, p = splitRatio_valid, list = F)
+  dt_valid_label = dt_label_pre[Patient_ID < 279201][ind_valid]
+  dt_train_label = dt_label_pre[Patient_ID < 279201][-ind_valid]
+    
+  dt_train = merge(dt_txn_pre, dt_train_label, by = "Patient_ID")
+  dt_valid = merge(dt_txn_pre, dt_valid_label, by = "Patient_ID")
+  
+  print(paste("dt_train:", dim(dt_train)))
+  print(paste("dt_valid:", dim(dt_valid)))
+  print(paste("dt_test:", dim(dt_test)))
+  
+  return(list(dt_train = dt_train
+              , dt_valid = dt_valid
+              , dt_test = dt_test))
+  
+}
+
+
+

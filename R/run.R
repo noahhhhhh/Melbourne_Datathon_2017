@@ -21,33 +21,148 @@ config$splitRatio = c(.8, .2)
 
 
 ls_dt = splitData_TimeBased(dt_txn
+                            , dt_ilness
                             , trainEndDate = config$trainEndDate
                             , testEndDate = config$testEndDate
                             , splitRatio = config$splitRatio)
 
+# ls_dt = splitDate_TestSetBased(dt_txn[Patient_ID < 279201], dt_ilness, splitRatio = config$splitRatio)
 
+rm(dt_txn, ls_dt1, ls_dt2)
+gc()
 
 # feature engineering -----------------------------------------------------
 
+## train
+print("##### Train - ATC Features #####")
+dt_train_eng_atc = featureEngineer_ATC(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+saveRDS(dt_train_eng_atc, "../data/MelbDatathon2017/rds/dt_train_eng_atc.rds")
+rm(dt_train_eng_atc)
+gc()
 
-dt_train_eng = featureEngineer(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+print("##### Train - Date Features #####")
+dt_train_eng_date = featureEngineer_Date(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+saveRDS(dt_train_eng_date, "../data/MelbDatathon2017/rds/dt_train_eng_date.rds")
+rm(dt_train_eng_date)
+gc()
 
-dt_valid_eng = featureEngineer(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+print("##### Train - Txns Features #####")
+dt_train_eng_txns = featureEngineer_Txns(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+saveRDS(dt_train_eng_txns, "../data/MelbDatathon2017/rds/dt_train_eng_txns.rds")
+rm(dt_train_eng_txns)
+gc()
+
+print("##### Train - Illness Features #####")
+dt_train_eng_illness = featureEngineer_Illness(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+saveRDS(dt_train_eng_illness, "../data/MelbDatathon2017/rds/dt_train_eng_illness.rds")
+rm(dt_train_eng_illness)
+gc()
+
+print("##### Train - Drug Features #####")
+dt_train_eng_drug = featureEngineer_Drug(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+saveRDS(dt_train_eng_drug, "../data/MelbDatathon2017/rds/dt_train_eng_drug.rds")
+rm(dt_train_eng_drug)
+gc()
+
+print("##### Train - Patient Features #####")
+dt_train_eng_patient = featureEngineer_Patient(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc, dt_patient, dt_store)
+saveRDS(dt_train_eng_patient, "../data/MelbDatathon2017/rds/dt_train_eng_patient.rds")
+rm(dt_train_eng_patient)
+gc()
+
+## valid
+print("##### Valid - ATC Features #####")
+dt_valid_eng_atc = featureEngineer_ATC(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+saveRDS(dt_valid_eng_atc, "../data/MelbDatathon2017/rds/dt_valid_eng_atc.rds")
+rm(dt_valid_eng_atc)
+gc()
+
+print("##### Valid - Date Features #####")
+dt_valid_eng_date = featureEngineer_Date(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+saveRDS(dt_valid_eng_date, "../data/MelbDatathon2017/rds/dt_valid_eng_date.rds")
+rm(dt_valid_eng_date)
+gc()
+
+print("##### Valid - Txns Features #####")
+dt_valid_eng_txns = featureEngineer_Txns(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+saveRDS(dt_valid_eng_txns, "../data/MelbDatathon2017/rds/dt_valid_eng_txns.rds")
+rm(dt_valid_eng_txns)
+gc()
+
+print("##### Valid - Illness Features #####")
+dt_valid_eng_illness = featureEngineer_Illness(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+saveRDS(dt_valid_eng_illness, "../data/MelbDatathon2017/rds/dt_valid_eng_illness.rds")
+rm(dt_valid_eng_illness)
+gc()
+
+print("##### Valid - Drug Features #####")
+dt_valid_eng_drug = featureEngineer_Drug(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+saveRDS(dt_valid_eng_drug, "../data/MelbDatathon2017/rds/dt_valid_eng_drug.rds")
+rm(dt_valid_eng_drug)
+gc()
+
+print("##### Valid - Patient Features #####")
+dt_valid_eng_patient = featureEngineer_Patient(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc, dt_patient, dt_store)
+saveRDS(dt_valid_eng_patient, "../data/MelbDatathon2017/rds/dt_valid_eng_patient.rds")
+rm(dt_valid_eng_patient)
+gc()
 
 # dt_test_eng = featureEngineer(ls_dt$dt_test, trainEndDate = config$trainEndDate)
+# gc()
+
+rm(ls_dt)
+gc()
+
+dt_train_eng_atc = readRDS("../data/MelbDatathon2017/rds/dt_train_eng_atc.rds")
+dt_train_eng_date = readRDS("../data/MelbDatathon2017/rds/dt_train_eng_date.rds")
+dt_train_eng_txns = readRDS("../data/MelbDatathon2017/rds/dt_train_eng_txns.rds")
+dt_train_eng_illness = readRDS("../data/MelbDatathon2017/rds/dt_train_eng_illness.rds")
+dt_train_eng_drug = readRDS("../data/MelbDatathon2017/rds/dt_train_eng_drug.rds")
+dt_train_eng_patient = readRDS("../data/MelbDatathon2017/rds/dt_train_eng_patient.rds")
+
+dt_valid_eng_atc = readRDS("../data/MelbDatathon2017/rds/dt_valid_eng_atc.rds")
+dt_valid_eng_date = readRDS("../data/MelbDatathon2017/rds/dt_valid_eng_date.rds")
+dt_valid_eng_txns = readRDS("../data/MelbDatathon2017/rds/dt_valid_eng_txns.rds")
+dt_valid_eng_illness = readRDS("../data/MelbDatathon2017/rds/dt_valid_eng_illness.rds")
+dt_valid_eng_drug = readRDS("../data/MelbDatathon2017/rds/dt_valid_eng_drug.rds")
+dt_valid_eng_patient = readRDS("../data/MelbDatathon2017/rds/dt_valid_eng_patient.rds")
 
 
+dt_train_eng = merge(dt_train_eng_atc, dt_train_eng_date, by = c("Patient_ID", "Target"))
+dt_train_eng = merge(dt_train_eng, dt_train_eng_txns, by = c("Patient_ID", "Target"))
+dt_train_eng = merge(dt_train_eng, dt_train_eng_illness, by = c("Patient_ID", "Target"))
+dt_train_eng = merge(dt_train_eng, dt_train_eng_drug, by = c("Patient_ID", "Target"))
+dt_train_eng = merge(dt_train_eng, dt_train_eng_patient, by = c("Patient_ID", "Target"))
+
+dt_valid_eng = merge(dt_valid_eng_atc, dt_valid_eng_date, by = c("Patient_ID", "Target"))
+dt_valid_eng = merge(dt_valid_eng, dt_valid_eng_txns, by = c("Patient_ID", "Target"))
+dt_valid_eng = merge(dt_valid_eng, dt_valid_eng_illness, by = c("Patient_ID", "Target"))
+dt_valid_eng = merge(dt_valid_eng, dt_valid_eng_drug, by = c("Patient_ID", "Target"))
+dt_valid_eng = merge(dt_valid_eng, dt_valid_eng_patient, by = c("Patient_ID", "Target"))
+
+rm(dt_train_eng_atc, dt_train_eng_date, dt_train_eng_txns, dt_train_eng_illness, dt_train_eng_drug, dt_train_eng_patient)
+rm(dt_valid_eng_atc, dt_valid_eng_date, dt_valid_eng_txns, dt_valid_eng_illness, dt_valid_eng_drug, dt_valid_eng_patient)
+gc()
 
 # preprocess --------------------------------------------------------------
 
-
-dt_train_eng_prep = preprocess(dt_train_eng, impute_to_0 = T, normalisation = T, crossEntropy = T)
-dt_valid_eng_prep = preprocess(dt_valid_eng, impute_to_0 = T, normalisation = T, crossEntropy = T)
+ls_preprocess = preprocess(dt_train_eng = dt_train_eng, dt_valid_eng = dt_valid_eng
+                           , impute_to_0 = T, normalisation = T, crossEntropy = T)
+# dt_valid_eng_prep = preprocess(dt_valid_eng, impute_to_0 = T, normalisation = T, crossEntropy = T)
 # dt_test_eng_prep = preprocess(dt_test_eng, impute_to_0 = T, normalisation = T, crossEntropy = T)
 
-
+rm(dt_train_eng, dt_valid_eng)
+gc()
 
 # model -------------------------------------------------------------------
 
-model_xgb = model(dt_train_eng_prep, dt_valid_eng_prep, modelType = "xgboost")
-# [73]	train-auc:0.971862	valid-auc:0.969310
+print(paste0("[", Sys.time(), "]: ", "Single Xgb ..."))
+model_xgb = model(ls_preprocess$dt_train_eng, ls_preprocess$dt_valid_eng, modelType = "xgboost")
+print(paste0("[", Sys.time(), "]: ", "Single Xgb Done ..."))
+# [73]	train-auc:0.971862	valid-auc:0.969310  (without ATC)
+# [112]	train-auc:0.971568	valid-auc:0.972089  (with ATC)
+# [35]	train-auc:0.971014	valid-auc:0.971300  (with ATC and crossEntropy)
+# [14]	train-auc:0.970227	valid-auc:0.973048  (with IPI, Illness, Drug without PBS, Ingredient, Brand)
+# [25]	train-auc:0.970937	valid-auc:0.972005  (with IPI, Illness, Drug without PBS, Brand)
+# [18]	train-auc:0.970159	valid-auc:0.972132  (with IPI, Illness, Drug without PBS, Brand with patient)
+
