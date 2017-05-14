@@ -35,32 +35,32 @@ The task is to predict the probability that a patient will be dispensed a drug r
 ## Non-key Features
 - Date
   - Tenure_Total [Done]
-    - Tenure_Total_Dispense
-    - Tenure_Total_Prescription
-    - Tenure_Chronic (continuous tenure treating chronic illnesses)
-    - Tenure_NonChronic (continuous tenure treating non-chronic illnesses)
-    - Tenure_Illness_Diabetes, COPD, Hyper Tension, etc. (continuous tenure treating an illness)
-    - Tenure_per_Prescription
-      - Avg
-      - Max
-    - Tenure_per_Drug
-      - Avg
-      - Max
+    - Tenure_Total_Dispense [Done]
+    - Tenure_Total_Prescription [Done]
+    - Tenure_Chronic (continuous tenure treating chronic illnesses) [Done]
+    - Tenure_NonChronic (continuous tenure treating non-chronic illnesses) [Done]
+    - Tenure_Illness_Diabetes, COPD, Hyper Tension, etc. (continuous tenure treating an illness) [Done]
+    - Tenure_per_Prescription [Done]
+      - Avg [Done]
+      - Max [Done]
+    - Tenure_per_Drug [Done]
+      - Avg [Done]
+      - Max [Done]
   - Shopping_Density (most of txns in a short period, or txns are well dristributed over time?) [Done]
     - Shopping_Density_Illness_Diabetes, COPD, Hyper Tension, etc.
   - Avg_Days_between_Prescription_Dispense [Done]
     - Avg_Days_between_Prescription_Dispense_Illness
   - Days_till_End [Done]
     - Days_till_End_Illness
-  - IPI
-    - IPI_Prescription
-    - IPI_Drug
-    - IPI_Illness
-      - mean
-      - sd
-      - median
-      - max
-      - min
+  - IPI [Done]
+    - IPI_Prescription [Done]
+    - IPI_Txns [Done]
+    - IPI_Illness [Done]
+      - mean [Done]
+      - sd [Done]
+      - median [Done]
+      - max [Done]
+      - min [Done]
 - Basic Txn [Done]
   - No_Txns [Done]
   - No_Drugs [Done]
@@ -107,25 +107,42 @@ The task is to predict the probability that a patient will be dispensed a drug r
   - ATC_CrossEntropy [Done]
     - Refactor level [Done]
     - Raw level [Done]
-- Illness
-  - Most_Common_Illness
-  - Last_Illness
-  - First_Illness
-  - Illness_CrossEntropy
+- Illness [Done]
+  - Most_Common_Illness [Done]
+  - Last_Illness [Done]
+  - First_Illness [Done]
+  - Illness_CrossEntropy [Done]
 - Drug
-  - Most_Common_Drug
-  - Last_Drug
-  - First_Drug
-  - Drug_CrossEntropy
+  - Most_Common_Drug [Done]
+  - Last_Drug [Done]
+  - First_Drug [Done]
+  - Drug_CrossEntropy [Done]
   - PBS
+  - Ingredient
+  - Brand
 - Patient
   - Dist_postcode
     - mean
     - sd
+  - Age
+  - Gender
 - Store
   - BannerGroup
-    - 
 
+- Event
+  - Last_Year
+    - Illness
+    - Drug
+    - Date
+    - Basic Txns
+    - ATC
+   - Last_3_Months
+    - Illness
+    - Drug
+    - Date
+    - Basic Txns
+    - ATC
+   
 # Preprocess
   - Impute NAs and Infs
   - Normalisation
