@@ -12,6 +12,7 @@ The task is to predict the probability that a patient will be dispensed a drug r
 - Overall Transition to Diabetes
   - What drugs would lead to diabetes
   - What illnesses would lead to diabetes
+  - What ingredient would lead to diabetes
 - I_Diabetes_Before
   - Whether a patient had diabetes drug before 2016
 - Drug Association
@@ -51,7 +52,7 @@ The task is to predict the probability that a patient will be dispensed a drug r
   - Avg_Days_between_Prescription_Dispense [Done]
     - Avg_Days_between_Prescription_Dispense_Illness
   - Days_till_End [Done]
-    - Days_till_End_Illness
+    - Days_till_End_Illness [Done]
   - IPI [Done]
     - IPI_Prescription [Done]
     - IPI_Txns [Done]
@@ -83,6 +84,26 @@ The task is to predict the probability that a patient will be dispensed a drug r
   - No_Drugs_per_Precription [Done]
     - Avg [Done]
     - Max [Done]
+  - Spend/Price/Save_Txn [Done]
+    - sum [Done]
+    - mean [Done]
+    - sd [Done]
+    - median [Done]
+    - max [Done]
+    - min [Done]
+  - Spend/Price/Save_Prescription [Done]
+    - mean [Done]
+    - sd [Done]
+    - median [Done]
+    - max [Done]
+    - min [Done]
+  - Spend/Price/Save_Illness [Done]
+    - sum [Done]
+    - mean [Done]
+    - sd [Done]
+    - median [Done]
+    - max [Done]
+    - min [Done]
 
 - ATC
   - Refactor (substring) [Done]
@@ -118,16 +139,22 @@ The task is to predict the probability that a patient will be dispensed a drug r
   - First_Drug [Done]
   - Drug_CrossEntropy [Done]
   - PBS
-  - Ingredient
+    - Percent_PBS_vs_Non_PBS
+  - Ingredient [Done]
+    - Most_Common_Ingredient [Done]
+    - Last_Ingredient [Done]
+    - First_Ingredient [Done]
+    - Ingredient_CrossEntropy [Done]
   - Brand
-- Patient
-  - Dist_postcode
-    - mean
-    - sd
-  - Age
-  - Gender
-- Store
-  - BannerGroup
+- Patient [Done]
+  - Dist_Postcode [Done]
+    - mean [Done]
+    - sd [Done]
+    - median [Done]
+    - max [Done]
+    - min [Done]
+  - Age [Done]
+  - Gender [Done]
 
 - Event
   - Last_Year
