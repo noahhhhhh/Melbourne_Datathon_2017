@@ -35,27 +35,32 @@ The task is to predict the probability that a patient will be dispensed a drug r
 ## Non-key Features
 - Date
   - Tenure_Total [Done]
-    - Tenure_Total_Dispense
-    - Tenure_Total_Prescription
-    - Tenure_Chronic (continuous tenure treating chronic illnesses)
-    - Tenure_NonChronic (continuous tenure treating non-chronic illnesses)
-    - Tenure_Illness_Diabetes, COPD, Hyper Tension, etc. (continuous tenure treating an illness)
-    - Tenure_per_Prescription
-      - Avg
-      - Max
-    - Tenure_per_Drug
-      - Avg
-      - Max
+    - Tenure_Total_Dispense [Done]
+    - Tenure_Total_Prescription [Done]
+    - Tenure_Chronic (continuous tenure treating chronic illnesses) [Done]
+    - Tenure_NonChronic (continuous tenure treating non-chronic illnesses) [Done]
+    - Tenure_Illness_Diabetes, COPD, Hyper Tension, etc. (continuous tenure treating an illness) [Done]
+    - Tenure_per_Prescription [Done]
+      - Avg [Done]
+      - Max [Done]
+    - Tenure_per_Drug [Done]
+      - Avg [Done]
+      - Max [Done]
   - Shopping_Density (most of txns in a short period, or txns are well dristributed over time?) [Done]
     - Shopping_Density_Illness_Diabetes, COPD, Hyper Tension, etc.
   - Avg_Days_between_Prescription_Dispense [Done]
     - Avg_Days_between_Prescription_Dispense_Illness
   - Days_till_End [Done]
     - Days_till_End_Illness
-  - IPI
-    - mean
-    - sd
-    - slope
+  - IPI [Done]
+    - IPI_Prescription [Done]
+    - IPI_Txns [Done]
+    - IPI_Illness [Done]
+      - mean [Done]
+      - sd [Done]
+      - median [Done]
+      - max [Done]
+      - min [Done]
 - Basic Txn [Done]
   - No_Txns [Done]
   - No_Drugs [Done]
@@ -78,6 +83,7 @@ The task is to predict the probability that a patient will be dispensed a drug r
   - No_Drugs_per_Precription [Done]
     - Avg [Done]
     - Max [Done]
+
 - ATC
   - Refactor (substring) [Done]
   - No_ATC_1, 2, ..., 5 [Done]
@@ -98,21 +104,54 @@ The task is to predict the probability that a patient will be dispensed a drug r
   - No_Illnesses_ATC_1, 2, ..., 5 [Done]
     - Refactor level [Done]
     - Max_ATC_1, 2, ..., 5 [Done]
-  - Cross-Entropy (remember to avoid overfit)
-    - Refactor level
-    - Raw level
+  - ATC_CrossEntropy [Done]
+    - Refactor level [Done]
+    - Raw level [Done]
+- Illness [Done]
+  - Most_Common_Illness [Done]
+  - Last_Illness [Done]
+  - First_Illness [Done]
+  - Illness_CrossEntropy [Done]
 - Drug
+  - Most_Common_Drug [Done]
+  - Last_Drug [Done]
+  - First_Drug [Done]
+  - Drug_CrossEntropy [Done]
+  - PBS
+  - Ingredient
+  - Brand
 - Patient
+  - Dist_postcode
+    - mean
+    - sd
+  - Age
+  - Gender
 - Store
+  - BannerGroup
 
+- Event
+  - Last_Year
+    - Illness
+    - Drug
+    - Date
+    - Basic Txns
+    - ATC
+   - Last_3_Months
+    - Illness
+    - Drug
+    - Date
+    - Basic Txns
+    - ATC
+   
 # Preprocess
   - Impute NAs and Infs
   - Normalisation
-  - Cross-Entropy between Categorical Features and Target
-  - 
+  - Target mean between Categorical Features and Target (remember to avoid overfit)
+  
 # Models
-  - Non-Diabetes Patients turning Diabetes Model
-  - Existing Diabetes Patient Lapsing Model
+  - Non-Diabetes Patients --> Diabetes Model
+  - Existing Diabetes Patient --> Non-Diabetes Model
+  - Patients Lapsing Model
   
 # Cross-Validation
   - Time-based
