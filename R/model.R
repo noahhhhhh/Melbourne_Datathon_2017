@@ -1,4 +1,4 @@
-model = function(dt_train, dt_valid, modelType = "xgboost"){
+model = function(dt_train, dt_valid, modelTarget, modelType = "xgboost"){
   
   source("R/utils.R")
   require(Metrics)
@@ -27,13 +27,13 @@ model = function(dt_train, dt_valid, modelType = "xgboost"){
       , subsample = .8
       , colsample_bytree = .8
       , colsample_bylevel = .8
-      
+      , scale_pos_weight = ifelse(modelTarget == "Lapsing", length(dt_train$Target == 0) / length(dt_train$Target == 1), 1)
       , objective = "binary:logistic"
       , eval_metric = "auc"
     )
     
     # watchlist
-    watchlist = list(train = mx_train, valid = mx_valid)
+    watchlist = list(valid = mx_valid)
     
     # model
     print("  - modelling ...")
@@ -50,7 +50,7 @@ model = function(dt_train, dt_valid, modelType = "xgboost"){
     print("  - scoreTracker ...")
     featureNames = names(dt_valid)
     score = auc(dt_valid$Target, predict(model_xgb, mx_valid))
-    scoreTracker(modelType, score, featureNames)
+    scoreTracker(modelTarget, modelType, score, featureNames)
     
     ls_model[[modelType]] = model_xgb
   }

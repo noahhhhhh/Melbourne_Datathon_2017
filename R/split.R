@@ -1,5 +1,5 @@
 
-splitData_TimeBased = function(dt_txn, dt_ilness, trainEndDate = "2015-01-01", testEndDate = NULL, splitRatio = NULL){
+splitData_TimeBased = function(dt_txn, Target = "General", dt_ilness, trainEndDate = "2015-01-01", testEndDate = NULL, splitRatio = NULL){
   
   print(paste0("[", Sys.time(), "]: ", "splitData_TimeBased ..."))
   require(caret)
@@ -23,12 +23,24 @@ splitData_TimeBased = function(dt_txn, dt_ilness, trainEndDate = "2015-01-01", t
   
   # label targets -----------------------------------------------------------
   
-  
-  dt_label = dt_txn_pos[, .(Target = any(ChronicIllness == "Diabetes")), by = .(Patient_ID)]
-  dt_label[, Target := ifelse(Target == T, 1, 0)]
-  dt_txn_pre = merge(dt_txn_pre, dt_label, by = "Patient_ID", all.x = T)
-  dt_txn_pre[is.na(Target), Target := 0]
-  dt_label_pre = dt_txn_pre[, .(Target = max(Target)), by = Patient_ID]
+  if(Target == "General"){
+    
+    dt_label = dt_txn_pos[, .(Target = any(ChronicIllness == "Diabetes")), by = .(Patient_ID)]
+    dt_label[, Target := ifelse(Target == T, 1, 0)]
+    dt_txn_pre = merge(dt_txn_pre, dt_label, by = "Patient_ID", all.x = T)
+    dt_txn_pre[is.na(Target), Target := 0]
+    dt_label_pre = dt_txn_pre[, .(Target = max(Target)), by = Patient_ID]
+    
+  }else if(Target == "Lapsing"){
+    
+    dt_label = data.table(Patient_ID = setdiff(unique(dt_txn_pre$Patient_ID)
+                                               , unique(dt_txn_pos$Patient_ID)))
+    dt_label[, Target := 1]
+    dt_txn_pre = merge(dt_txn_pre, dt_label, by = "Patient_ID", all.x = T)
+    dt_txn_pre[is.na(Target), Target := 0]
+    dt_label_pre = dt_txn_pre[, .(Target = max(Target)), by = Patient_ID]
+    
+  }
   
   
   # stratified sampling train, valid, and test ------------------------------
@@ -87,8 +99,6 @@ splitDate_TestSetBased = function(dt_txn, dt_ilness, splitRatio = NULL){
   require(data.table)
   
   trainEndDate = "2016-01-01"
-
-  
   
   # merge illness -----------------------------------------------------------
   

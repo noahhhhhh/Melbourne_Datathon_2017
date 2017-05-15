@@ -1,4 +1,4 @@
-scoreTracker = function(modelType, score, featureNames){
+scoreTracker = function(modelTarget, modelType, score, featureNames){
 
   path_scoreTracker = "../data/MelbDatathon2017/rds/scoreTracker.rds"
   
@@ -9,6 +9,7 @@ scoreTracker = function(modelType, score, featureNames){
     ls_scoreTracker = readRDS(path_scoreTracker)
     ls_scoreTracker[[curTime]][["features"]] = featureNames
     ls_scoreTracker[[curTime]][["modelType"]] = modelType
+    ls_scoreTracker[[curTime]][["modelTarget"]] = modelTarget
     ls_scoreTracker[[curTime]][["score"]] = score
     
     
@@ -17,6 +18,7 @@ scoreTracker = function(modelType, score, featureNames){
     ls_scoreTracker = list()
     ls_scoreTracker[[curTime]][["features"]] = featureNames
     ls_scoreTracker[[curTime]][["modelType"]] = modelType
+    ls_scoreTracker[[curTime]][["modelTarget"]] = modelTarget
     ls_scoreTracker[[curTime]][["score"]] = score
     
     

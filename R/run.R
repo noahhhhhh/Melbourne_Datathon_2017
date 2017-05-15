@@ -14,13 +14,14 @@ config = list()
 config$trainEndDate = "2015-01-01"
 config$testEndDate = "2016-01-01"
 config$splitRatio = c(.8, .2)
-
+config$Target = "Lapsing"
 
 
 # split -------------------------------------------------------------------
 
 
 ls_dt = splitData_TimeBased(dt_txn
+                            , Target = config$Target
                             , dt_ilness
                             , trainEndDate = config$trainEndDate
                             , testEndDate = config$testEndDate
@@ -28,82 +29,84 @@ ls_dt = splitData_TimeBased(dt_txn
 
 # ls_dt = splitDate_TestSetBased(dt_txn[Patient_ID < 279201], dt_ilness, splitRatio = config$splitRatio)
 
-rm(dt_txn, ls_dt1, ls_dt2)
+rm(dt_txn)
 gc()
 
 # feature engineering -----------------------------------------------------
 
+path_rds = paste0("../data/MelbDatathon2017/rds/", config$Target, "/")
+
 ## train
 print("##### Train - ATC Features #####")
 dt_train_eng_atc = featureEngineer_ATC(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_train_eng_atc, "../data/MelbDatathon2017/rds/dt_train_eng_atc.rds")
+saveRDS(dt_train_eng_atc, paste0(path_rds, "dt_train_eng_atc.rds"))
 rm(dt_train_eng_atc)
 gc()
 
 print("##### Train - Date Features #####")
 dt_train_eng_date = featureEngineer_Date(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_train_eng_date, "../data/MelbDatathon2017/rds/dt_train_eng_date.rds")
+saveRDS(dt_train_eng_date, paste0(path_rds, "dt_train_eng_date.rds"))
 rm(dt_train_eng_date)
 gc()
 
 print("##### Train - Txns Features #####")
 dt_train_eng_txns = featureEngineer_Txns(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_train_eng_txns, "../data/MelbDatathon2017/rds/dt_train_eng_txns.rds")
+saveRDS(dt_train_eng_txns, paste0(path_rds, "dt_train_eng_txns.rds"))
 rm(dt_train_eng_txns)
 gc()
 
 print("##### Train - Illness Features #####")
 dt_train_eng_illness = featureEngineer_Illness(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_train_eng_illness, "../data/MelbDatathon2017/rds/dt_train_eng_illness.rds")
+saveRDS(dt_train_eng_illness, paste0(path_rds, "dt_train_eng_illness.rds"))
 rm(dt_train_eng_illness)
 gc()
 
 print("##### Train - Drug Features #####")
 dt_train_eng_drug = featureEngineer_Drug(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_train_eng_drug, "../data/MelbDatathon2017/rds/dt_train_eng_drug.rds")
+saveRDS(dt_train_eng_drug, paste0(path_rds, "dt_train_eng_drug.rds"))
 rm(dt_train_eng_drug)
 gc()
 
 print("##### Train - Patient Features #####")
 dt_train_eng_patient = featureEngineer_Patient(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc, dt_patient, dt_store)
-saveRDS(dt_train_eng_patient, "../data/MelbDatathon2017/rds/dt_train_eng_patient.rds")
+saveRDS(dt_train_eng_patient, paste0(path_rds, "dt_train_eng_patient.rds"))
 rm(dt_train_eng_patient)
 gc()
 
 ## valid
 print("##### Valid - ATC Features #####")
 dt_valid_eng_atc = featureEngineer_ATC(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_valid_eng_atc, "../data/MelbDatathon2017/rds/dt_valid_eng_atc.rds")
+saveRDS(dt_valid_eng_atc, paste0(path_rds, "dt_valid_eng_atc.rds"))
 rm(dt_valid_eng_atc)
 gc()
 
 print("##### Valid - Date Features #####")
 dt_valid_eng_date = featureEngineer_Date(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_valid_eng_date, "../data/MelbDatathon2017/rds/dt_valid_eng_date.rds")
+saveRDS(dt_valid_eng_date, paste0(path_rds, "dt_valid_eng_date.rds"))
 rm(dt_valid_eng_date)
 gc()
 
 print("##### Valid - Txns Features #####")
 dt_valid_eng_txns = featureEngineer_Txns(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_valid_eng_txns, "../data/MelbDatathon2017/rds/dt_valid_eng_txns.rds")
+saveRDS(dt_valid_eng_txns, paste0(path_rds, "dt_valid_eng_txns.rds"))
 rm(dt_valid_eng_txns)
 gc()
 
 print("##### Valid - Illness Features #####")
 dt_valid_eng_illness = featureEngineer_Illness(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_valid_eng_illness, "../data/MelbDatathon2017/rds/dt_valid_eng_illness.rds")
+saveRDS(dt_valid_eng_illness, paste0(path_rds, "dt_valid_eng_illness.rds"))
 rm(dt_valid_eng_illness)
 gc()
 
 print("##### Valid - Drug Features #####")
 dt_valid_eng_drug = featureEngineer_Drug(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_valid_eng_drug, "../data/MelbDatathon2017/rds/dt_valid_eng_drug.rds")
+saveRDS(dt_valid_eng_drug, paste0(path_rds, "dt_valid_eng_drug.rds"))
 rm(dt_valid_eng_drug)
 gc()
 
 print("##### Valid - Patient Features #####")
 dt_valid_eng_patient = featureEngineer_Patient(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc, dt_patient, dt_store)
-saveRDS(dt_valid_eng_patient, "../data/MelbDatathon2017/rds/dt_valid_eng_patient.rds")
+saveRDS(dt_valid_eng_patient, paste0(path_rds, "dt_valid_eng_patient.rds"))
 rm(dt_valid_eng_patient)
 gc()
 
@@ -113,19 +116,19 @@ gc()
 rm(ls_dt)
 gc()
 
-dt_train_eng_atc = readRDS("../data/MelbDatathon2017/rds/dt_train_eng_atc.rds")
-dt_train_eng_date = readRDS("../data/MelbDatathon2017/rds/dt_train_eng_date.rds")
-dt_train_eng_txns = readRDS("../data/MelbDatathon2017/rds/dt_train_eng_txns.rds")
-dt_train_eng_illness = readRDS("../data/MelbDatathon2017/rds/dt_train_eng_illness.rds")
-dt_train_eng_drug = readRDS("../data/MelbDatathon2017/rds/dt_train_eng_drug.rds")
-dt_train_eng_patient = readRDS("../data/MelbDatathon2017/rds/dt_train_eng_patient.rds")
+dt_train_eng_atc = readRDS(paste0(path_rds, "dt_train_eng_atc.rds"))
+dt_train_eng_date = readRDS(paste0(path_rds, "dt_train_eng_date.rds"))
+dt_train_eng_txns = readRDS(paste0(path_rds, "dt_train_eng_txns.rds"))
+dt_train_eng_illness = readRDS(paste0(path_rds, "dt_train_eng_illness.rds"))
+dt_train_eng_drug = readRDS(paste0(path_rds, "dt_train_eng_drug.rds"))
+dt_train_eng_patient = readRDS(paste0(path_rds, "dt_train_eng_patient.rds"))
 
-dt_valid_eng_atc = readRDS("../data/MelbDatathon2017/rds/dt_valid_eng_atc.rds")
-dt_valid_eng_date = readRDS("../data/MelbDatathon2017/rds/dt_valid_eng_date.rds")
-dt_valid_eng_txns = readRDS("../data/MelbDatathon2017/rds/dt_valid_eng_txns.rds")
-dt_valid_eng_illness = readRDS("../data/MelbDatathon2017/rds/dt_valid_eng_illness.rds")
-dt_valid_eng_drug = readRDS("../data/MelbDatathon2017/rds/dt_valid_eng_drug.rds")
-dt_valid_eng_patient = readRDS("../data/MelbDatathon2017/rds/dt_valid_eng_patient.rds")
+dt_valid_eng_atc = readRDS(paste0(path_rds, "dt_valid_eng_atc.rds"))
+dt_valid_eng_date = readRDS(paste0(path_rds, "dt_valid_eng_date.rds"))
+dt_valid_eng_txns = readRDS(paste0(path_rds, "dt_valid_eng_txns.rds"))
+dt_valid_eng_illness = readRDS(paste0(path_rds, "dt_valid_eng_illness.rds"))
+dt_valid_eng_drug = readRDS(paste0(path_rds, "dt_valid_eng_drug.rds"))
+dt_valid_eng_patient = readRDS(paste0(path_rds, "dt_valid_eng_patient.rds"))
 
 
 dt_train_eng = merge(dt_train_eng_atc, dt_train_eng_date, by = c("Patient_ID", "Target"))
@@ -157,7 +160,7 @@ gc()
 # model -------------------------------------------------------------------
 
 print(paste0("[", Sys.time(), "]: ", "Single Xgb ..."))
-model_xgb = model(ls_preprocess$dt_train_eng, ls_preprocess$dt_valid_eng, modelType = "xgboost")
+model_xgb = model(ls_preprocess$dt_train_eng, ls_preprocess$dt_valid_eng, modelTarget = config$Target, modelType = "xgboost")
 print(paste0("[", Sys.time(), "]: ", "Single Xgb Done ..."))
 # [73]	train-auc:0.971862	valid-auc:0.969310  (without ATC)
 # [112]	train-auc:0.971568	valid-auc:0.972089  (with ATC)
@@ -166,3 +169,11 @@ print(paste0("[", Sys.time(), "]: ", "Single Xgb Done ..."))
 # [25]	train-auc:0.970937	valid-auc:0.972005  (with IPI, Illness, Drug without PBS, Brand)
 # [18]	train-auc:0.970159	valid-auc:0.972132  (with IPI, Illness, Drug without PBS, Brand with patient)
 
+
+
+mx_valid = xgb.DMatrix(data.matrix(ls_preprocess$dt_valid_eng[, !c("Patient_ID", "Target"), with = F])
+                       , label = ls_preprocess$dt_valid_eng$Target)
+
+pred_valid = predict(model_xgb$xgboost, mx_valid)
+pred_valid_threshold = ifelse(pred_valid > .5, 1, 0)
+cm = confusionMatrix(pred_valid_threshold, ls_preprocess$dt_valid_eng$Target)
