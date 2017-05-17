@@ -92,7 +92,7 @@ splitData_TimeBased = function(dt_txn, Target = "General", dt_ilness, trainEndDa
 }
 
 
-splitDate_TestSetBased = function(dt_txn, dt_ilness, splitRatio = NULL){
+splitData_TestSetBased = function(dt_txn, dt_ilness, splitRatio = NULL){
   
   print(paste0("[", Sys.time(), "]: ", "splitDate_TestSetBased ..."))
   require(caret)
@@ -159,4 +159,126 @@ splitDate_TestSetBased = function(dt_txn, dt_ilness, splitRatio = NULL){
 }
 
 
+splitData_Oneyear_2016 = function(dt_txn, Target = "General", dt_ilness, splitRatio = NULL){
+  
+  print(paste0("[", Sys.time(), "]: ", "splitData_Oneyear_2016 ..."))
+  require(caret)
+  require(data.table)
+  
+  
+  # merge illness -----------------------------------------------------------
+  
+  
+  dt_txn = merge(dt_txn, dt_ilness[, .(MasterProductID, ChronicIllness)], by.x = "Drug_ID", by.y = "MasterProductID", all.x = T)
+  dt_txn[is.na(ChronicIllness), ChronicIllness := "Non-Chronic"]
+  
+  # post 2016 ---------------------------------------------------------------
+  
+  dt_pos = dt_txn[Dispense_Week >= as.Date("2016-01-01")]
+  dt_pre = dt_txn[Dispense_Week >= as.Date("2015-01-01") & Dispense_Week < as.Date("2016-01-01")]
+  
+  # label--------------------------------------------------------------------
+  
+  dt_pre_label = dt_pos[, .(Target = any(ChronicIllness == "Diabetes")), by = Patient_ID]
+  dt_pre_label[, Target := ifelse(Target == T, 1, 0)]
+  dt_pre = merge(dt_pre, dt_pre_label, by = "Patient_ID", all.x = T)
+  dt_pre[is.na(Target), Target := 0]
+  dt_pre_label = dt_pre[, .(Target = max(Target)), by = Patient_ID]
+  
+  # split -------------------------------------------------------------------
+  
+  dt_test = dt_pre[Patient_ID >= 279201]
+  
+  y_all = dt_pre_label[Patient_ID < 279201]$Target
+  
+  dt_pre[, Target := NULL]
+  
+  splitRatio_train = splitRatio[1]
+  splitRatio_valid = splitRatio[2]
+  
+  # browser()
+  # createDataPartition
+  ind_valid = createDataPartition(y_all, p = splitRatio_valid, list = F)
+  dt_valid_label = dt_pre_label[Patient_ID < 279201][ind_valid]
+  dt_train_label = dt_pre_label[Patient_ID < 279201][-ind_valid]
+  
+  dt_train = merge(dt_pre, dt_train_label, by = "Patient_ID")
+  dt_valid = merge(dt_pre, dt_valid_label, by = "Patient_ID")
+  
+  print(paste("dt_train:", dim(dt_train)))
+  print(paste("dt_valid:", dim(dt_valid)))
+  print(paste("dt_test:", dim(dt_test)))
+  
+  return(list(dt_train = dt_train
+              , dt_valid = dt_valid
+              , dt_test = dt_test))
+  
+}
+
+
+splitData_Oneyear = function(dt_txn, Target = "General", dt_ilness, splitRatio = NULL, years = NULL){
+  
+  print(paste0("[", Sys.time(), "]: ", "splitData_Oneyear ..."))
+  require(caret)
+  require(data.table)
+  
+  
+  # merge illness -----------------------------------------------------------
+  
+  
+  dt_txn = merge(dt_txn, dt_ilness[, .(MasterProductID, ChronicIllness)], by.x = "Drug_ID", by.y = "MasterProductID", all.x = T)
+  dt_txn[is.na(ChronicIllness), ChronicIllness := "Non-Chronic"]
+  
+  # pre and pos -------------------------------------------------------------
+  
+  if(is.null(years)){
+    
+    years = c("2012-01-01", "2013-01-01", "2014-01-01", "2015-01-01")
+    
+  }
+  dt_trains = data.table()
+  dt_valids = data.table()
+  
+  for(year in years){
+    
+    dt_pos = dt_txn[Dispense_Week >= as.Date(year) & Dispense_Week < (as.Date(year) + years(1))]
+    dt_pre = dt_txn[Dispense_Week >= (as.Date(year) - years(1)) & Dispense_Week < as.Date(year)]
+    
+    # label--------------------------------------------------------------------
+    
+    dt_pre_label = dt_pos[, .(Target = any(ChronicIllness == "Diabetes")), by = Patient_ID]
+    dt_pre_label[, Target := ifelse(Target == T, 1, 0)]
+    dt_pre = merge(dt_pre, dt_pre_label, by = "Patient_ID", all.x = T)
+    dt_pre[is.na(Target), Target := 0]
+    dt_pre_label = dt_pre[, .(Target = max(Target)), by = Patient_ID]
+    
+    # split -------------------------------------------------------------------
+    
+    y_all = dt_pre_label$Target
+    
+    dt_pre[, Target := NULL]
+    
+    splitRatio_train = splitRatio[1]
+    splitRatio_valid = splitRatio[2]
+    
+    # createDataPartition
+    ind_valid = createDataPartition(y_all, p = splitRatio_valid, list = F)
+    dt_valid_label = dt_pre_label[ind_valid]
+    dt_train_label = dt_pre_label[-ind_valid]
+    
+    dt_train = merge(dt_pre, dt_train_label, by = "Patient_ID")
+    dt_valid = merge(dt_pre, dt_valid_label, by = "Patient_ID")
+    
+    print(paste("dt_train:", dim(dt_train)))
+    print(paste("dt_valid:", dim(dt_valid)))
+    
+    dt_trains = rbind(dt_trains, dt_train)
+    dt_valids = rbind(dt_trains, dt_valid)
+    
+  }
+  
+  return(list(dt_train = dt_train
+              , dt_valid = dt_valid))
+  
+}
 

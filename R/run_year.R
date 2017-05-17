@@ -16,7 +16,6 @@ config$testEndDate = "2016-01-01"
 config$splitRatio = c(.8, .2)
 config$Target = "General"
 
-path_rds = paste0("../data/MelbDatathon2017/rds/", config$Target, "/")
 
 # split -------------------------------------------------------------------
 
@@ -31,86 +30,96 @@ path_rds = paste0("../data/MelbDatathon2017/rds/", config$Target, "/")
 # ls_dt = splitData_TestSetBased(dt_txn[Patient_ID < 279201], dt_ilness, splitRatio = config$splitRatio)
 
 ls_dt_2016 = splitData_Oneyear_2016(dt_txn, Target = config$Target, dt_ilness, splitRatio = config$splitRatio)
-ls_dt_pre2016 = splitData_Oneyear(dt_txn, Target = config$Target, dt_ilness, splitRatio = config$splitRatio)
 
-rm(dt_txn)
-gc()
+years = c("2012-01-01", "2013-01-01", "2014-01-01", "2015-01-01")
 
-# feature engineering -----------------------------------------------------
+path_rds = paste0("../data/MelbDatathon2017/rds/", year(as.Date(year)), "/", config$Target, "/")
 
-## train
-print("##### Train - ATC Features #####")
-dt_train_eng_atc = featureEngineer_ATC(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_train_eng_atc, paste0(path_rds, "dt_train_eng_atc.rds"))
-rm(dt_train_eng_atc)
-gc()
+for(year in years){
+  
+  ls_dt = splitData_Oneyear(dt_txn, Target = config$Target, dt_ilness, splitRatio = config$splitRatio)
+  
+  rm(dt_txn)
+  gc()
+  
+  # feature engineering -----------------------------------------------------
+  
+  ## train
+  print("##### Train - ATC Features #####")
+  dt_train_eng_atc = featureEngineer_ATC(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+  saveRDS(dt_train_eng_atc, paste0(path_rds, "dt_train_eng_atc.rds"))
+  rm(dt_train_eng_atc)
+  gc()
+  
+  print("##### Train - Date Features #####")
+  dt_train_eng_date = featureEngineer_Date(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+  saveRDS(dt_train_eng_date, paste0(path_rds, "dt_train_eng_date.rds"))
+  rm(dt_train_eng_date)
+  gc()
+  
+  print("##### Train - Txns Features #####")
+  dt_train_eng_txns = featureEngineer_Txns(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+  saveRDS(dt_train_eng_txns, paste0(path_rds, "dt_train_eng_txns.rds"))
+  rm(dt_train_eng_txns)
+  gc()
+  
+  print("##### Train - Illness Features #####")
+  dt_train_eng_illness = featureEngineer_Illness(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+  saveRDS(dt_train_eng_illness, paste0(path_rds, "dt_train_eng_illness.rds"))
+  rm(dt_train_eng_illness)
+  gc()
+  
+  print("##### Train - Drug Features #####")
+  dt_train_eng_drug = featureEngineer_Drug(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+  saveRDS(dt_train_eng_drug, paste0(path_rds, "dt_train_eng_drug.rds"))
+  rm(dt_train_eng_drug)
+  gc()
+  
+  print("##### Train - Patient Features #####")
+  dt_train_eng_patient = featureEngineer_Patient(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc, dt_patient, dt_store)
+  saveRDS(dt_train_eng_patient, paste0(path_rds, "dt_train_eng_patient.rds"))
+  rm(dt_train_eng_patient)
+  gc()
+  
+  ## valid
+  print("##### Valid - ATC Features #####")
+  dt_valid_eng_atc = featureEngineer_ATC(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+  saveRDS(dt_valid_eng_atc, paste0(path_rds, "dt_valid_eng_atc.rds"))
+  rm(dt_valid_eng_atc)
+  gc()
+  
+  print("##### Valid - Date Features #####")
+  dt_valid_eng_date = featureEngineer_Date(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+  saveRDS(dt_valid_eng_date, paste0(path_rds, "dt_valid_eng_date.rds"))
+  rm(dt_valid_eng_date)
+  gc()
+  
+  print("##### Valid - Txns Features #####")
+  dt_valid_eng_txns = featureEngineer_Txns(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+  saveRDS(dt_valid_eng_txns, paste0(path_rds, "dt_valid_eng_txns.rds"))
+  rm(dt_valid_eng_txns)
+  gc()
+  
+  print("##### Valid - Illness Features #####")
+  dt_valid_eng_illness = featureEngineer_Illness(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+  saveRDS(dt_valid_eng_illness, paste0(path_rds, "dt_valid_eng_illness.rds"))
+  rm(dt_valid_eng_illness)
+  gc()
+  
+  print("##### Valid - Drug Features #####")
+  dt_valid_eng_drug = featureEngineer_Drug(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
+  saveRDS(dt_valid_eng_drug, paste0(path_rds, "dt_valid_eng_drug.rds"))
+  rm(dt_valid_eng_drug)
+  gc()
+  
+  print("##### Valid - Patient Features #####")
+  dt_valid_eng_patient = featureEngineer_Patient(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc, dt_patient, dt_store)
+  saveRDS(dt_valid_eng_patient, paste0(path_rds, "dt_valid_eng_patient.rds"))
+  rm(dt_valid_eng_patient)
+  gc()
+  
+}
 
-print("##### Train - Date Features #####")
-dt_train_eng_date = featureEngineer_Date(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_train_eng_date, paste0(path_rds, "dt_train_eng_date.rds"))
-rm(dt_train_eng_date)
-gc()
-
-print("##### Train - Txns Features #####")
-dt_train_eng_txns = featureEngineer_Txns(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_train_eng_txns, paste0(path_rds, "dt_train_eng_txns.rds"))
-rm(dt_train_eng_txns)
-gc()
-
-print("##### Train - Illness Features #####")
-dt_train_eng_illness = featureEngineer_Illness(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_train_eng_illness, paste0(path_rds, "dt_train_eng_illness.rds"))
-rm(dt_train_eng_illness)
-gc()
-
-print("##### Train - Drug Features #####")
-dt_train_eng_drug = featureEngineer_Drug(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_train_eng_drug, paste0(path_rds, "dt_train_eng_drug.rds"))
-rm(dt_train_eng_drug)
-gc()
-
-print("##### Train - Patient Features #####")
-dt_train_eng_patient = featureEngineer_Patient(ls_dt$dt_train, trainEndDate = config$trainEndDate, dt_drug, dt_atc, dt_patient, dt_store)
-saveRDS(dt_train_eng_patient, paste0(path_rds, "dt_train_eng_patient.rds"))
-rm(dt_train_eng_patient)
-gc()
-
-## valid
-print("##### Valid - ATC Features #####")
-dt_valid_eng_atc = featureEngineer_ATC(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_valid_eng_atc, paste0(path_rds, "dt_valid_eng_atc.rds"))
-rm(dt_valid_eng_atc)
-gc()
-
-print("##### Valid - Date Features #####")
-dt_valid_eng_date = featureEngineer_Date(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_valid_eng_date, paste0(path_rds, "dt_valid_eng_date.rds"))
-rm(dt_valid_eng_date)
-gc()
-
-print("##### Valid - Txns Features #####")
-dt_valid_eng_txns = featureEngineer_Txns(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_valid_eng_txns, paste0(path_rds, "dt_valid_eng_txns.rds"))
-rm(dt_valid_eng_txns)
-gc()
-
-print("##### Valid - Illness Features #####")
-dt_valid_eng_illness = featureEngineer_Illness(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_valid_eng_illness, paste0(path_rds, "dt_valid_eng_illness.rds"))
-rm(dt_valid_eng_illness)
-gc()
-
-print("##### Valid - Drug Features #####")
-dt_valid_eng_drug = featureEngineer_Drug(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc)
-saveRDS(dt_valid_eng_drug, paste0(path_rds, "dt_valid_eng_drug.rds"))
-rm(dt_valid_eng_drug)
-gc()
-
-print("##### Valid - Patient Features #####")
-dt_valid_eng_patient = featureEngineer_Patient(ls_dt$dt_valid, trainEndDate = config$trainEndDate, dt_drug, dt_atc, dt_patient, dt_store)
-saveRDS(dt_valid_eng_patient, paste0(path_rds, "dt_valid_eng_patient.rds"))
-rm(dt_valid_eng_patient)
-gc()
 
 # dt_test_eng = featureEngineer(ls_dt$dt_test, trainEndDate = config$trainEndDate)
 # gc()

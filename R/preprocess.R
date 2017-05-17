@@ -1,4 +1,4 @@
-preprocess = function(dt_train_eng, dt_valid_eng, impute_to_0 = T, normalisation = T, crossEntropy = T){
+preprocess = function(dt_train_eng, dt_valid_eng, impute_to_0 = T, normalisation = T, targetMean = T, featureSelection = T){
   
   require(data.table)
 
@@ -55,6 +55,16 @@ preprocess = function(dt_train_eng, dt_valid_eng, impute_to_0 = T, normalisation
   }
   
   # targetMean -------------------------------------------------------------
+  
+  
+  # featureSelection -------------------------------------------------------
+  
+  if(featureSelection == T){
+    
+    
+    
+    
+  }
   
   
   return(list(dt_train_eng = dt[TrainValidTest == "Train", !c("TrainValidTest"), with = F]
