@@ -63,6 +63,7 @@ The task is to predict the probability that a patient will be dispensed a drug r
       - max [Done]
       - min [Done]
 - Basic Txn [Done]
+  - Bought_Diabetes
   - No_Txns [Done]
   - No_Drugs [Done]
   - No_Illnesses [Done]
