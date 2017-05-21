@@ -14,7 +14,7 @@ The task is to predict the probability that a patient will be dispensed a drug r
   - What illnesses would lead to diabetes
   - What ingredient would lead to diabetes
 - I_Diabetes_Before
-  - Whether a patient had diabetes drug before 2016
+  - Whether a patient had diabetes drug before 2016 [Done]
 - Drug Association
   - Sequential Association
 - Illness Association
@@ -63,6 +63,7 @@ The task is to predict the probability that a patient will be dispensed a drug r
       - max [Done]
       - min [Done]
 - Basic Txn [Done]
+  - Bought_Diabetes
   - No_Txns [Done]
   - No_Drugs [Done]
   - No_Illnesses [Done]
@@ -188,4 +189,17 @@ The task is to predict the probability that a patient will be dispensed a drug r
   - Standard CV
     - Train on all patients pre 2016
     - Validate on Patient_ID 1 - 279200
+
+# Model structure
+  - Models
+    - Previous year general model with all features
+    - Previous 2-year general model with all features
+    - Previous 3-year general model with all features
+    - Standard CV general model with all features
+  - Model Types
+    - xgboost
+    - lightGBM
+    - linear
+    - tensorflow NN
+  
     
