@@ -1,3 +1,19 @@
+## Bought_Illness ##
+featureEngineer_bought_illness = function(dt, dt_raw, illnesses){
+  
+  for(ill in illnesses){
+    
+    dt_bought_illness = dt[, .(Bought_Diabetes = any(ChronicIllness == ill)), by = Patient_ID]
+    dt_raw = merge(dt_raw, dt_bought_illness, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 1)], paste0("Bought_Illness_", gsub(" |-", "_", ill))))
+    
+  }
+  
+  gc()
+  return(dt_raw)
+  
+}
+
 ## Save_Illness ##
 featureEngineer_Save_illness = function(dt, dt_raw, illnesses){
   
@@ -739,6 +755,11 @@ featureEngineer_Txns = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_atc
   # basic txn ---------------------------------------------------------------
   
   print(paste0("[", Sys.time(), "]: ", "  - Basic Txn Features ..."))
+  
+  # Bought_Diabetes
+  print(paste0("[", Sys.time(), "]: ", "    - Bought_Diabetes ..."))
+  dt_raw = featureEngineer_bought_illness(dt, dt_raw, illnesses)
+  print(dim(dt_raw))
   
   # No_Txns
   print(paste0("[", Sys.time(), "]: ", "    - No_Txns ..."))

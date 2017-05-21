@@ -159,12 +159,12 @@ splitData_TestSetBased = function(dt_txn, dt_ilness, splitRatio = NULL){
 }
 
 
-splitData_Oneyear_2016 = function(dt_txn, Target = "General", dt_ilness, splitRatio = NULL){
+splitData_year_2016 = function(dt_txn, Target = "General", dt_ilness, splitRatio = NULL, no_of_year = NA){
   
-  print(paste0("[", Sys.time(), "]: ", "splitData_Oneyear_2016 ..."))
+  print(paste0("[", Sys.time(), "]: ", "splitData_year_2016 ..."))
   require(caret)
   require(data.table)
-  
+  require(lubridate)
   
   # merge illness -----------------------------------------------------------
   
@@ -175,7 +175,13 @@ splitData_Oneyear_2016 = function(dt_txn, Target = "General", dt_ilness, splitRa
   # post 2016 ---------------------------------------------------------------
   
   dt_pos = dt_txn[Dispense_Week >= as.Date("2016-01-01")]
-  dt_pre = dt_txn[Dispense_Week >= as.Date("2015-01-01") & Dispense_Week < as.Date("2016-01-01")]
+  
+  if(!is.na(no_of_year)){
+    dt_pre = dt_txn[Dispense_Week >= (as.Date("2016-01-01") - years(no_of_year)) & Dispense_Week < as.Date("2016-01-01")]
+  }else{
+    dt_pre = dt_txn[Dispense_Week < as.Date("2016-01-01")]
+  }
+  
   
   # label--------------------------------------------------------------------
   
@@ -216,11 +222,12 @@ splitData_Oneyear_2016 = function(dt_txn, Target = "General", dt_ilness, splitRa
 }
 
 
-splitData_Oneyear = function(dt_txn, Target = "General", dt_ilness, splitRatio = NULL, years = NULL){
+splitData_year = function(dt_txn, Target = "General", dt_ilness, splitRatio = NULL, years = NULL, no_of_year = NA){
   
-  print(paste0("[", Sys.time(), "]: ", "splitData_Oneyear ..."))
+  print(paste0("[", Sys.time(), "]: ", "splitData_year ...", no_of_year))
   require(caret)
   require(data.table)
+  require(lubridate)
   
   
   # merge illness -----------------------------------------------------------
@@ -233,7 +240,7 @@ splitData_Oneyear = function(dt_txn, Target = "General", dt_ilness, splitRatio =
   
   if(is.null(years)){
     
-    years = c("2012-01-01", "2013-01-01", "2014-01-01", "2015-01-01")
+    years = c("2013-01-01", "2014-01-01", "2015-01-01")
     
   }
   dt_trains = data.table()
@@ -241,8 +248,14 @@ splitData_Oneyear = function(dt_txn, Target = "General", dt_ilness, splitRatio =
   
   for(year in years){
     
-    dt_pos = dt_txn[Dispense_Week >= as.Date(year) & Dispense_Week < (as.Date(year) + years(1))]
-    dt_pre = dt_txn[Dispense_Week >= (as.Date(year) - years(1)) & Dispense_Week < as.Date(year)]
+    dt_pos = dt_txn[Dispense_Week >= as.Date(year) & Dispense_Week < (as.Date(year) + years(1) + months(4))]
+    
+    if(!is.na(no_of_year)){
+      dt_pre = dt_txn[Dispense_Week >= (as.Date(year) - years(no_of_year)) & Dispense_Week < as.Date(year)]
+    }else{
+      dt_pre = dt_txn[Dispense_Week < as.Date(year)]
+    }
+    
     
     # label--------------------------------------------------------------------
     
