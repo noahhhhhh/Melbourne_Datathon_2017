@@ -1,4 +1,4 @@
-model = function(dt_train, dt_valid, modelTarget, modelType = "xgboost", gridSearch = F){
+model = function(dt_train, dt_valid, modelTarget, modelType = "xgboost", randomSearch = F){
   
   source("R/utils.R")
   require(Metrics)
@@ -19,17 +19,17 @@ model = function(dt_train, dt_valid, modelTarget, modelType = "xgboost", gridSea
     mx_valid = xgb.DMatrix(data.matrix(dt_valid[, !c("Patient_ID", "Target"), with = F])
                            , label = dt_valid$Target)
     
-    if(gridSearch == F){
+    if(randomSearch == F){
       # params
       params = list(
         booster = "gbtree"
-        , eta = .015
-        , max_depth = 6
-        , min_child_weight = 3
-        , subsample = .8
-        , colsample_bytree = .8
-        , colsample_bylevel = .8
-        , gamma = 0
+        , eta = 0.000425338450889103
+        , max_depth = 14
+        , min_child_weight = 1
+        , subsample = 0.570443930663168
+        , colsample_bytree = 0.676142484601587
+        , colsample_bylevel = 0.838651546183974
+        , gamma = 0.560226952889934
         , scale_pos_weight = ifelse(modelTarget == "Lapsing", length(dt_train$Target == 0) / length(dt_train$Target == 1), 1)
         , objective = "binary:logistic"
         , eval_metric = "auc"
@@ -59,85 +59,78 @@ model = function(dt_train, dt_valid, modelTarget, modelType = "xgboost", gridSea
       
     }else{
       
-      seq_eta = seq(.001, .1, .01)
-      seq_max_depth = seq(5, 15, 1)
-      seq_min_child_weight = seq(1, 8, 1)
-      seq_subsample = seq(.5, .9, .1)
-      seq_colsample_bytree = seq(.5, .9, .1)
-      seq_colsample_bylevel = seq(.5, .9, .1)
-      seq_gamma = seq(0, 2, .5)
+      seq_eta = c(.0001, .01)
+      seq_max_depth = seq(5, 15)
+      seq_min_child_weight = seq(1, 8)
+      seq_subsample = c(.5, .9)
+      seq_colsample_bytree = c(.5, .9)
+      seq_colsample_bylevel = c(.5, .9)
+      seq_gamma = seq(0, 2)
       
       ls_score = list()
       
-      for(eta in seq_eta){
+      for(i in 1:2){
         
-        for(max_depth in seq_max_depth){
-          
-          for(min_child_weight in seq_min_child_weight){
-            
-            for(subsample in seq_subsample){
-              
-              for(colsample_bytree in seq_colsample_bytree){
-                
-                for(colsample_bylevel in seq_colsample_bylevel){
-                  
-                  for(gamma in seq_gamma){
-                    
-                    # params
-                    params = list(
-                      booster = "gbtree"
-                      , eta = eta
-                      , max_depth = max_depth
-                      , min_child_weight = min_child_weight
-                      , subsample = subsample
-                      , colsample_bytree = colsample_bytree
-                      , colsample_bylevel = colsample_bylevel
-                      , gamma = gamma
-                      , scale_pos_weight = ifelse(modelTarget == "Lapsing", length(dt_train$Target == 0) / length(dt_train$Target == 1), 1)
-                      , objective = "binary:logistic"
-                      , eval_metric = "auc"
-                    )
-                    
-                    # watchlist
-                    watchlist = list(valid = mx_valid)
-                    
-                    # model
-                    print("  - modelling ...")
-                    set.seed(888)
-                    model_xgb = xgb.train(params = params
-                                          , data = mx_train
-                                          , nrounds = 1000
-                                          , nthread = 16
-                                          , watchlist = watchlist
-                                          , early_stopping_rounds = 10
-                                          , print_every_n = 50)
-                    
-                    # scoreTracker
-                    print("  - scoreTracker ...")
-                    score = auc(dt_valid$Target, predict(model_xgb, mx_valid))
-                    
-                    print(params)
-                    print(score)
-                    ls_score[[length(ls_score) + 1]] =  list(params = params, score = score)
-                    
-                  }
-                  
-                }
-                
-                
-              }
-              
-            }
-            
-          }
-          
-        }
+        # params
+        set.seed(888)
+        params = list(
+          booster = "gbtree"
+          , eta = runif(1, seq_eta[1], seq_eta[2])
+          , max_depth = sample(seq_max_depth, 1)
+          , min_child_weight = sample(seq_min_child_weight, 1)
+          , subsample = runif(1, seq_subsample[1], seq_subsample[2])
+          , colsample_bytree = runif(1, seq_colsample_bytree[1], seq_colsample_bytree[2])
+          , colsample_bylevel = runif(1, seq_colsample_bylevel[1], seq_colsample_bylevel[2])
+          , gamma = runif(1, seq_gamma[1], seq_gamma[2])
+          , scale_pos_weight = ifelse(modelTarget == "Lapsing", length(dt_train$Target == 0) / length(dt_train$Target == 1), 1)
+          , objective = "binary:logistic"
+          , eval_metric = "auc"
+        )
+        
+        # watchlist
+        watchlist = list(valid = mx_valid)
+        
+        # model
+        print("  - modelling ...")
+        set.seed(888)
+        model_xgb = xgb.train(params = params
+                              , data = mx_train
+                              , nrounds = 1000
+                              , nthread = 16
+                              , watchlist = watchlist
+                              , early_stopping_rounds = 10
+                              , print_every_n = 50)
+        
+        # scoreTracker
+        score = auc(dt_valid$Target, predict(model_xgb, mx_valid))
+        
+        print(unlist(params))
+        print(score)
+        ls_score[[i]] =  list(params = params, score = score)
         
       }
       
+      # params
+      params = ls_score[[which.max(lapply(ls_score, function(x)x$score))]][["params"]]
       
-      return(ls_score)
+      # watchlist
+      watchlist = list(train = mx_train, valid = mx_valid)
+      
+      # model
+      print("  - modelling ...")
+      set.seed(888)
+      model_xgb = xgb.train(params = params
+                            , data = mx_train
+                            , nrounds = 1000
+                            , nthread = 16
+                            , watchlist = watchlist
+                            , early_stopping_rounds = 10
+                            , print_every_n = 50)
+      
+      ls_model[[modelType]] = model_xgb
+      
     }
+      
     
   }
   

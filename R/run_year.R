@@ -20,11 +20,11 @@ config$no_of_year = NA
 
 # split -------------------------------------------------------------------
 
-ls_dt = splitData_year_2016(dt_txn, Target = config$Target, dt_ilness, splitRatio = config$splitRatio, no_of_year = config$no_of_year)
-
-# years = c("2013-01-01", "2014-01-01", "2015-01-01")
-
 year = "2016-01-01"
+
+ls_dt = splitData_year_2016(dt_txn, Target = config$Target, dt_ilness, splitRatio = config$splitRatio, no_of_year = config$no_of_year)
+# ls_dt = splitData_year(dt_txn, Target = config$Target, dt_ilness, splitRatio = config$splitRatio, years = year, no_of_year = config$no_of_year)
+
 
 if(!is.na(config$no_of_year)){
   
@@ -35,11 +35,6 @@ if(!is.na(config$no_of_year)){
   path_rds = paste0("../data/MelbDatathon2017/rds/", config$Target, "/", year(as.Date(year)), "/")
   
 }
-
-# ls_dt = splitData_year(dt_txn, Target = config$Target, dt_ilness, splitRatio = config$splitRatio, years = year, no_of_year = config$no_of_year)
-
-# rm(dt_txn)
-gc()
 
 # feature engineering -----------------------------------------------------
 
@@ -161,7 +156,7 @@ gc()
 
 # merge -------------------------------------------------------------------
 
-years_ = seq(2013, 2016)
+# years_ = seq(2013, 2016)
 years_ = 2016
 
 dt_train_eng_all = data.table()
@@ -220,25 +215,6 @@ rm(dt_valid_eng_atc, dt_valid_eng_date, dt_valid_eng_txns, dt_valid_eng_illness,
 gc()
 
 
-
-# featureSelection --------------------------------------------------------
-
-# require(doParallel)
-# registerDoParallel(7)
-# getDoParWorkers()
-# 
-# ga_ctrl = gafsControl(functions = rfGA, # Assess fitness with RF
-#                       method = "cv",    # 10 fold cross validation
-#                       number = 2,
-#                       genParallel = TRUE, # Use parallel programming
-#                       allowParallel = TRUE)
-# 
-# rf_ga3 = gafs(x = dt_train_eng, y = dt_train_eng$Target,
-#               iters = 100, # 100 generations of algorithm
-#               popSize = 200, # population size for each generation
-#               gafsControl = ga_ctrl)
-
-
 # preprocess --------------------------------------------------------------
 
 
@@ -249,7 +225,7 @@ ls_preprocess = preprocess(dt_train_eng = dt_train_eng_all, dt_valid_eng = dt_va
 # dt_valid_eng_prep = preprocess(dt_valid_eng, impute_to_0 = T, normalisation = T, crossEntropy = T)
 # dt_test_eng_prep = preprocess(dt_test_eng, impute_to_0 = T, normalisation = T, crossEntropy = T)
 
-rm(dt_train_eng_all, dt_valid_eng_all)
+# rm(dt_train_eng_all, dt_valid_eng_all)
 gc()
 
 
@@ -257,15 +233,10 @@ gc()
 
 print(paste0("[", Sys.time(), "]: ", "Single Xgb ..."))
 model_xgb = model(ls_preprocess$dt_train_eng, ls_preprocess$dt_valid_eng
-                  , modelTarget = config$Target, modelType = "xgboost", gridSearch = T)
+                  , modelTarget = config$Target, modelType = "xgboost", randomSearch = F)
 print(paste0("[", Sys.time(), "]: ", "Single Xgb Done ..."))
-# [73]	train-auc:0.971862	valid-auc:0.969310  (without ATC)
-# [112]	train-auc:0.971568	valid-auc:0.972089  (with ATC)
-# [35]	train-auc:0.971014	valid-auc:0.971300  (with ATC and crossEntropy)
-# [14]	train-auc:0.970227	valid-auc:0.973048  (with IPI, Illness, Drug without PBS, Ingredient, Brand)
-# [25]	train-auc:0.970937	valid-auc:0.972005  (with IPI, Illness, Drug without PBS, Brand)
-# [18]	train-auc:0.970159	valid-auc:0.972132  (with IPI, Illness, Drug without PBS, Brand with patient)
 
+# auc
 auc = function(actual, predicted) 
 {
   r <- rank(predicted)
@@ -276,13 +247,6 @@ auc = function(actual, predicted)
   auc
 }
 
-# mx_valid = xgb.DMatrix(data.matrix(ls_preprocess$dt_valid_eng[, !c("Patient_ID", "Target"), with = F])
-#                        , label = ls_preprocess$dt_valid_eng$Target)
-# 
-# pred_valid = predict(model_xgb$xgboost, mx_valid)
-# pred_valid_threshold = ifelse(pred_valid > .5, 1, 0)
-# cm = confusionMatrix(pred_valid_threshold, ls_preprocess$dt_valid_eng$Target)
-
-
+# importance
 importance = xgb.importance(setdiff(names(ls_preprocess$dt_valid_eng), c("Patient_ID", "Target")), model_xgb$xgboost)
 xgb.plot.importance(importance[1:50])
