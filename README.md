@@ -63,7 +63,7 @@ The task is to predict the probability that a patient will be dispensed a drug r
       - max [Done]
       - min [Done]
 - Basic Txn [Done]
-  - Bought_Diabetes
+  - Bought_Illness
   - No_Txns [Done]
   - No_Drugs [Done]
   - No_Illnesses [Done]
@@ -170,7 +170,12 @@ The task is to predict the probability that a patient will be dispensed a drug r
     - Date
     - Basic Txns
     - ATC
-   
+# Engineered features
+  - Sum_I_Bought_Illness
+  - Diff_Days_till_End_IPI_Txns
+  - Diff_Days_till_End_Illness_IPI_Illness
+  - RowSum_0
+  - Row
 # Preprocess
   - Impute NAs and Infs
   - Normalisation
