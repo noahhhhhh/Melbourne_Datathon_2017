@@ -206,5 +206,9 @@ The task is to predict the probability that a patient will be dispensed a drug r
     - lightGBM
     - linear
     - tensorflow NN
-  
-    
+
+# TODO
+  - fix trainEndDate
+  - pca
+  - linear regression
+  - add feature engineering
