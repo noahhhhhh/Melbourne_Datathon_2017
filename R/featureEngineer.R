@@ -1,3 +1,19 @@
+## TargetMean ##
+featureEngineer_target_mean = function(dt, col){
+  
+  dt_col = dt[, .N, by = c("Patient_ID", "Target", col)][, .N, by = c("Target", col)]
+  dt_col[, colSum := sum(N), by = col]
+  dt_col = dt_col[, targetMean := N / colSum][Target == 1, c(col, "targetMean"), with = F]
+  set.seed(888)
+  dt_col[, targetMean := ifelse(targetMean == 1, targetMean + runif(1, -.1, 0)
+                                , ifelse(targetMean == 0, targetMean + runif(1, 0, .1)
+                                         , targetMean + runif(1, -.1, .1)))]
+  dt_col[, targetMean := pmin(targetMean, 1)]
+  dt_col[, targetMean := pmax(targetMean, 0)]
+  
+  return(dt_col)
+}
+
 ## Bought_Illness ##
 featureEngineer_bought_illness = function(dt, dt_raw, illnesses){
   
@@ -468,7 +484,7 @@ featureEngineer_shopping_density_illness = function(dt, dt_raw, illnesses){
 # ATC Feature Engineering -------------------------------------------------
 
 
-featureEngineer_ATC = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_atc){
+featureEngineer_ATC = function(dt, trainEndDate = "2016-01-01", dt_drug, dt_atc){
   print(paste0("[", Sys.time(), "]: ", "ATC Feature Engineering ..."))
   print(dim(dt))
   
@@ -730,7 +746,7 @@ featureEngineer_ATC = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_atc)
 # Basic Txns Feature Engineering ------------------------------------------
 
 
-featureEngineer_Txns = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_atc){
+featureEngineer_Txns = function(dt, trainEndDate = "2016-01-01", dt_drug, dt_atc){
   
   print(paste0("[", Sys.time(), "]: ", "Txns Feature Engineering ..."))
   print(dim(dt))
@@ -966,7 +982,7 @@ featureEngineer_Txns = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_atc
 # Date Feature Engineering ------------------------------------------------
 
 
-featureEngineer_Date = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_atc){
+featureEngineer_Date = function(dt, trainEndDate = "2016-01-01", dt_drug, dt_atc){
   
   print(paste0("[", Sys.time(), "]: ", "Date Feature Engineering ..."))
   print(dim(dt))
@@ -1137,7 +1153,7 @@ featureEngineer_Date = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_atc
 # Illness Feature Engineering ---------------------------------------------
 
 
-featureEngineer_Illness = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_atc){
+featureEngineer_Illness = function(dt, trainEndDate = "2016-01-01", dt_drug, dt_atc){
   
   print(paste0("[", Sys.time(), "]: ", "Illness Feature Engineering ..."))
   print(dim(dt))
@@ -1220,7 +1236,8 @@ featureEngineer_Illness = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_
 
 # Drug Feature Engineering  -----------------------------------------------
 
-featureEngineer_Drug = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_atc){
+
+featureEngineer_Drug = function(dt, trainEndDate = "2016-01-01", dt_drug, dt_atc){
   
   print(paste0("[", Sys.time(), "]: ", "Drug Feature Engineering ..."))
   print(dim(dt))
@@ -1356,7 +1373,8 @@ featureEngineer_Drug = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_atc
 
 # Patient Feature Engineering ---------------------------------------------
 
-featureEngineer_Patient = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_atc, dt_patient, dt_store){
+
+featureEngineer_Patient = function(dt, trainEndDate = "2016-01-01", dt_drug, dt_atc, dt_patient, dt_store){
   
   print(paste0("[", Sys.time(), "]: ", "Patient Feature Engineering ..."))
   print(dim(dt))
@@ -1373,8 +1391,8 @@ featureEngineer_Patient = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_
   print(paste0("[", Sys.time(), "]: ", "    - COPD ..."))
   dt[ChronicIllness == "Chronic Obstructive Pulmonary Disease (COPD)", ChronicIllness := "COPD"]
   
-  print(paste0("[", Sys.time(), "]: ", "    - Prescription_ID ..."))
-  dt[, Prescription_ID := paste0(Prescriber_ID, "_", as.character(Prescription_Week), "_", Patient_ID)]
+  # print(paste0("[", Sys.time(), "]: ", "    - Prescription_ID ..."))
+  # dt[, Prescription_ID := paste0(Prescriber_ID, "_", as.character(Prescription_Week), "_", Patient_ID)]
   
   print(paste0("[", Sys.time(), "]: ", "    - dt_raw ..."))
   dt_raw = dt[, .(Patient_ID, Target)]
@@ -1404,12 +1422,305 @@ featureEngineer_Patient = function(dt, trainEndDate = "2015-01-01", dt_drug, dt_
   # gender and age
   dt_raw = merge(dt_raw, dt_patient[, .(Patient_ID, gender, year_of_birth)], by = "Patient_ID", all.x = T)
   dt_raw[, Age := as.numeric(substr(trainEndDate, 1, 4)) - year_of_birth]
+  dt_raw[, Age := ifelse(Age <= 20, "_20"
+                         , ifelse(Age > 20 & Age <= 30, "20_30"
+                                  , ifelse(Age > 30 & Age <= 40, "30_40"
+                                           , ifelse(Age > 40 & Age <= 50, "40_50"
+                                                    , ifelse(Age > 50 & Age <= 60, "50_60"
+                                                             , ifelse(Age > 60 & Age <= 70, "60_70"
+                                                                      , ifelse(Age > 70 & Age <= 80, "70_80"
+                                                                               , ifelse(Age > 80 & Age <= 90, "80_90"
+                                                                                        , "90_"))))))))]
   dt_raw[, year_of_birth := NULL]
   
   return(dt_raw)
   
 }
 
+
+# Extra Feature Engineering -----------------------------------------------
+
+
+featureEngineer_Extra = function(dt, dt_drug){
+  
+  
+  print(paste0("[", Sys.time(), "]: ", "Extra Feature Engineering ..."))
+  print(dim(dt))
+  
+  # Preparation -------------------------------------------------------------
+  
+  print(paste0("[", Sys.time(), "]: ", "  - Preparation ..."))
+  # print(paste0("[", Sys.time(), "]: ", "    - Merge dt_patient ..."))
+  # dt = merge(dt, dt_patient, by = "Patient_ID")
+  
+  # print(paste0("[", Sys.time(), "]: ", "    - Merge dt_store ..."))
+  # dt = merge(dt, dt_store, by = "Store_ID")
+  
+  print(paste0("[", Sys.time(), "]: ", "    - COPD ..."))
+  dt[ChronicIllness == "Chronic Obstructive Pulmonary Disease (COPD)", ChronicIllness := "COPD"]
+  
+  # print(paste0("[", Sys.time(), "]: ", "    - Prescription_ID ..."))
+  # dt[, Prescription_ID := paste0(Prescriber_ID, "_", as.character(Prescription_Week), "_", Patient_ID)]
+  
+  print(paste0("[", Sys.time(), "]: ", "    - dt_raw ..."))
+  dt_raw = dt[, .(Patient_ID, Target)]
+  dt_raw = dt_raw[!duplicated(dt_raw)]
+  
+  print(paste0("[", Sys.time(), "]: ", "    - illnesses ..."))
+  illnesses = c("Hypertension", "Depression", "COPD", "Lipids", "Heart Failure", "Immunology", "Urology"
+                , "Epilepsy", "Diabetes", "Anti-Coagulant", "Osteoporosis")
+  
+  
+  # Extra  -----------------------------------------------------------------
+  
+  #########################################
+  ######################## drug association
+  #########################################
+  dt_merge_pre_non_diabetes = readRDS("../data/MelbDatathon2017/rds/association/single/dt_merge_pre_non_diabetes.rds")
+  dt_pre_diabetes_only = readRDS("../data/MelbDatathon2017/rds/association/single/dt_pre_diabetes_only.rds")
+  
+  # pre diabetes drug support
+  print(paste0("[", Sys.time(), "]: ", "    - support_Pre_Diabetes ..."))
+  dt_patient_drug = dt[, .N, by = .(Patient_ID, Prescription_Week, Drug_ID)][, .N, by = .(Patient_ID, Drug_ID)]
+  dt_patient_drug_support = merge(dt_patient_drug, dt_merge_pre_non_diabetes, by = "Drug_ID", all.x = T)
+  
+  dt_patient_drug_support[is.na(support_Pre_Diabetes), support_Pre_Diabetes := 0]
+  dt_patient_drug_support[is.na(support), support := 0]
+  
+  dt_patient_drug_support = dt_patient_drug_support[, .(support_Pre_Diabetes = sum(support_Pre_Diabetes * N)
+                                                        , support = sum(support * N)), by = Patient_ID]
+  
+  dt_raw = merge(dt_raw, dt_patient_drug_support, by = "Patient_ID", all.x = T)
+  
+  # pre diabetes only drug support
+  print(paste0("[", Sys.time(), "]: ", "    - support_Pre_Diabetes ..."))
+  dt_patient_drug_pre_diabetes_only = merge(dt_patient_drug, dt_pre_diabetes_only[, .(Drug_ID, support_Pre_Diabetes)], by = "Drug_ID", all.x = T)
+  dt_patient_drug_pre_diabetes_only[is.na(support_Pre_Diabetes), support_Pre_Diabetes := 0]
+  dt_patient_drug_pre_diabetes_only = dt_patient_drug_pre_diabetes_only[, .(support_Pre_Diabetes = sum(support_Pre_Diabetes * N)), by = Patient_ID]
+  setnames(dt_patient_drug_pre_diabetes_only, names(dt_patient_drug_pre_diabetes_only), c("Patient_ID", "Diabetes_Only_Drugs"))
+  
+  dt_raw = merge(dt_raw, dt_patient_drug_pre_diabetes_only, by = "Patient_ID", all.x = T)
+  
+  ###############################################
+  ######################## ingredient association
+  ###############################################
+  dt_merge_pre_non_diabetes_ingredient = readRDS("../data/MelbDatathon2017/rds/association/single/dt_merge_pre_non_diabetes_ingredient.rds")
+  dt_pre_diabetes_only_ingredient = readRDS("../data/MelbDatathon2017/rds/association/single/dt_pre_diabetes_only_ingredient.rds")
+  
+  dt = merge(dt, dt_drug[, .(MasterProductID, GenericIngredientName)], by.x = "Drug_ID", by.y = "MasterProductID")
+  
+  # pre diabetes drug support
+  print(paste0("[", Sys.time(), "]: ", "    - support_Pre_Diabetes_ingredient ..."))
+  dt_patient_ingredient = dt[, .N, by = .(Patient_ID, Prescription_Week, GenericIngredientName)][, .N, by = .(Patient_ID, GenericIngredientName)]
+  dt_patient_ingredient_support = merge(dt_patient_ingredient, dt_merge_pre_non_diabetes_ingredient, by = "GenericIngredientName", all.x = T)
+  
+  dt_patient_ingredient_support[is.na(support_Pre_Diabetes), support_Pre_Diabetes := 0]
+  dt_patient_ingredient_support[is.na(support), support := 0]
+  
+  dt_patient_ingredient_support = dt_patient_ingredient_support[, .(support_Pre_Diabetes = sum(support_Pre_Diabetes * N)
+                                                                    , support = sum(support * N)), by = Patient_ID]
+  setnames(dt_patient_ingredient_support, names(dt_patient_ingredient_support)
+           , c("Patient_ID", "support_Pre_Diabetes_ingredient", "support_ingredient"))
+  dt_raw = merge(dt_raw, dt_patient_ingredient_support, by = "Patient_ID", all.x = T)
+  
+  # pre diabetes only drug support
+  print(paste0("[", Sys.time(), "]: ", "    - support_Pre_Diabetes_only_ingredient ..."))
+  dt_patient_ingredient_pre_diabetes_only = merge(dt_patient_ingredient, dt_pre_diabetes_only_ingredient[, .(GenericIngredientName, support_Pre_Diabetes)], by = "GenericIngredientName", all.x = T)
+  dt_patient_ingredient_pre_diabetes_only[is.na(support_Pre_Diabetes), support_Pre_Diabetes := 0]
+  dt_patient_ingredient_pre_diabetes_only = dt_patient_ingredient_pre_diabetes_only[, .(support_Pre_Diabetes = sum(support_Pre_Diabetes * N)), by = Patient_ID]
+  setnames(dt_patient_ingredient_pre_diabetes_only, names(dt_patient_ingredient_pre_diabetes_only), c("Patient_ID", "Diabetes_Only_ingredients"))
+  
+  dt_raw = merge(dt_raw, dt_patient_ingredient_pre_diabetes_only, by = "Patient_ID", all.x = T)
+  
+  return(dt_raw)
+  
+}
+
+
+# Target Mean Feature Engineering -----------------------------------------
+
+
+featureEngineer_TargetMean = function(dt, dt_drug){
+  
+  
+  print(paste0("[", Sys.time(), "]: ", "Target Mean Engineering ..."))
+  print(dim(dt))
+  
+  # Preparation -------------------------------------------------------------
+  
+  print(paste0("[", Sys.time(), "]: ", "  - Preparation ..."))
+  # print(paste0("[", Sys.time(), "]: ", "    - Merge dt_patient ..."))
+  # dt = merge(dt, dt_patient, by = "Patient_ID")
+  
+  # print(paste0("[", Sys.time(), "]: ", "    - Merge dt_store ..."))
+  # dt = merge(dt, dt_store, by = "Store_ID")
+  
+  print(paste0("[", Sys.time(), "]: ", "    - COPD ..."))
+  dt[ChronicIllness == "Chronic Obstructive Pulmonary Disease (COPD)", ChronicIllness := "COPD"]
+  
+  # print(paste0("[", Sys.time(), "]: ", "    - Prescription_ID ..."))
+  # dt[, Prescription_ID := paste0(Prescriber_ID, "_", as.character(Prescription_Week), "_", Patient_ID)]
+  
+  print(paste0("[", Sys.time(), "]: ", "    - dt_raw ..."))
+  dt_raw = dt[, .(Patient_ID, Target)]
+  dt_raw = dt_raw[!duplicated(dt_raw)]
+  
+  
+  # Target Mean  -------------------------------------------------------------
+  
+  ## txn
+  print(paste0("[", Sys.time(), "]: ", "    - txn ..."))
+  cols = c("Store_ID", "Prescriber_ID", "Drug_ID", "SourceSystem_Code", "ChronicIllness")
+  for(col in cols){
+    
+    # calc target mean
+    dt_col = featureEngineer_target_mean(dt, col)
+    
+    # merge dt_raw
+    dt_temp = dt[, .N, by = c("Patient_ID", col)]
+    dt_temp = merge(dt_temp, dt_col, by = col, all.x = T)
+    dt_temp = dt_temp[, .(TargetMean_mean = mean(targetMean, na.rm = T)
+                          , TargetMean_max = max(targetMean, na.rm = T)
+                          , TargetMean_min = min(targetMean, na.rm = T)
+                          , TargetMean_sd = sd(targetMean, na.rm = T)), by = Patient_ID]
+    
+    dt_raw = merge(dt_raw, dt_temp, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 4)]
+                                      , paste0("TargetMean_mean", col)
+                                      , paste0("TargetMean_max", col)
+                                      , paste0("TargetMean_min", col)
+                                      , paste0("TargetMean_sd", col)))
+    
+  }
+  print(dim(dt_raw))
+  
+  ## drug
+  print(paste0("[", Sys.time(), "]: ", "    - drug ..."))
+  cols = c("BrandName", "FormCode", "StrengthCode", "GenericIngredientName", "EthicalSubCategoryName", "EthicalCategoryName"
+           , "ManufacturerCode", "ManufacturerGroupCode", "ATCLevel5Code", "ATCLevel4Code", "ATCLevel3Code", "ATCLevel2Code", "ATCLevel1Code")
+  dt = merge(dt, dt_drug[, c("MasterProductID", cols), with = F], by.x = "Drug_ID", by.y = "MasterProductID")
+  
+  for(col in cols){
+    
+    # calc target mean
+    dt_col = featureEngineer_target_mean(dt, col)
+    
+    # merge dt_raw
+    dt_temp = dt[, .N, by = c("Patient_ID", col)]
+    dt_temp = merge(dt_temp, dt_col, by = col, all.x = T)
+    dt_temp = dt_temp[, .(TargetMean_mean = mean(targetMean, na.rm = T)
+                          , TargetMean_max = max(targetMean, na.rm = T)
+                          , TargetMean_min = min(targetMean, na.rm = T)
+                          , TargetMean_sd = sd(targetMean, na.rm = T)), by = Patient_ID]
+    
+    dt_raw = merge(dt_raw, dt_temp, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 4)]
+                                      , paste0("TargetMean_mean", col)
+                                      , paste0("TargetMean_max", col)
+                                      , paste0("TargetMean_min", col)
+                                      , paste0("TargetMean_sd", col)))
+    
+  }
+  print(dim(dt_raw))
+
+  
+  return(dt_raw)
+  
+  
+  
+}
+
+
+featureEngineer_TargetMean_test = function(dt, dt_test, dt_drug){
+  
+  
+  print(paste0("[", Sys.time(), "]: ", "Target Mean Feature Engineering ..."))
+  print(dim(dt_test))
+  
+  # Preparation -------------------------------------------------------------
+  
+  print(paste0("[", Sys.time(), "]: ", "  - Preparation ..."))
+  # print(paste0("[", Sys.time(), "]: ", "    - Merge dt_patient ..."))
+  # dt = merge(dt, dt_patient, by = "Patient_ID")
+  
+  # print(paste0("[", Sys.time(), "]: ", "    - Merge dt_store ..."))
+  # dt = merge(dt, dt_store, by = "Store_ID")
+  
+  print(paste0("[", Sys.time(), "]: ", "    - COPD ..."))
+  dt_test[ChronicIllness == "Chronic Obstructive Pulmonary Disease (COPD)", ChronicIllness := "COPD"]
+  
+  # print(paste0("[", Sys.time(), "]: ", "    - Prescription_ID ..."))
+  # dt[, Prescription_ID := paste0(Prescriber_ID, "_", as.character(Prescription_Week), "_", Patient_ID)]
+  
+  print(paste0("[", Sys.time(), "]: ", "    - dt_raw ..."))
+  dt_raw = dt_test[, .(Patient_ID, Target)]
+  dt_raw = dt_raw[!duplicated(dt_raw)]
+  
+  
+  # Target Mean  -------------------------------------------------------------
+  
+  ## txn
+  print(paste0("[", Sys.time(), "]: ", "    - txn ..."))
+  cols = c("Store_ID", "Prescriber_ID", "Drug_ID", "SourceSystem_Code", "ChronicIllness")
+  for(col in cols){
+    
+    # calc target mean
+    dt_col = featureEngineer_target_mean(dt, col)
+    
+    # merge dt_raw
+    dt_temp = dt_test[, .N, by = c("Patient_ID", col)]
+    dt_temp = merge(dt_temp, dt_col, by = col, all.x = T)
+    dt_temp = dt_temp[, .(TargetMean_mean = mean(targetMean, na.rm = T)
+                          , TargetMean_max = max(targetMean, na.rm = T)
+                          , TargetMean_min = min(targetMean, na.rm = T)
+                          , TargetMean_sd = sd(targetMean, na.rm = T)), by = Patient_ID]
+    
+    dt_raw = merge(dt_raw, dt_temp, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 4)]
+                                      , paste0("TargetMean_mean", col)
+                                      , paste0("TargetMean_max", col)
+                                      , paste0("TargetMean_min", col)
+                                      , paste0("TargetMean_sd", col)))
+    
+  }
+  print(dim(dt_raw))
+  
+  ## drug
+  print(paste0("[", Sys.time(), "]: ", "    - drug ..."))
+  cols = c("BrandName", "FormCode", "StrengthCode", "GenericIngredientName", "EthicalSubCategoryName", "EthicalCategoryName"
+           , "ManufacturerCode", "ManufacturerGroupCode", "ATCLevel5Code", "ATCLevel4Code", "ATCLevel3Code", "ATCLevel2Code", "ATCLevel1Code")
+  dt = merge(dt, dt_drug[, c("MasterProductID", cols), with = F], by.x = "Drug_ID", by.y = "MasterProductID")
+  dt_test = merge(dt_test, dt_drug[, c("MasterProductID", cols), with = F], by.x = "Drug_ID", by.y = "MasterProductID")
+  
+  for(col in cols){
+    
+    # calc target mean
+    dt_col = featureEngineer_target_mean(dt, col)
+    
+    # merge dt_raw
+    dt_temp = dt_test[, .N, by = c("Patient_ID", col)]
+    dt_temp = merge(dt_temp, dt_col, by = col, all.x = T)
+    dt_temp = dt_temp[, .(TargetMean_mean = mean(targetMean, na.rm = T)
+                          , TargetMean_max = max(targetMean, na.rm = T)
+                          , TargetMean_min = min(targetMean, na.rm = T)
+                          , TargetMean_sd = sd(targetMean, na.rm = T)), by = Patient_ID]
+    
+    dt_raw = merge(dt_raw, dt_temp, by = "Patient_ID", all.x = T)
+    setnames(dt_raw, names(dt_raw), c(names(dt_raw)[1:(ncol(dt_raw) - 4)]
+                                      , paste0("TargetMean_mean", col)
+                                      , paste0("TargetMean_max", col)
+                                      , paste0("TargetMean_min", col)
+                                      , paste0("TargetMean_sd", col)))
+    
+  }
+  print(dim(dt_raw))
+  
+  
+  return(dt_raw)
+  
+  
+  
+}
 
 
 

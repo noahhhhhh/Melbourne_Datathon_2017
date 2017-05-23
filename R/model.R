@@ -69,7 +69,7 @@ model = function(dt_train, dt_valid, modelTarget, modelType = "xgboost", randomS
       
       ls_score = list()
       
-      for(i in 1:2){
+      for(i in 1:50){
         
         # params
         set.seed(888)
@@ -110,6 +110,7 @@ model = function(dt_train, dt_valid, modelTarget, modelType = "xgboost", randomS
         
       }
       
+      
       # params
       params = ls_score[[which.max(lapply(ls_score, function(x)x$score))]][["params"]]
       
@@ -128,6 +129,7 @@ model = function(dt_train, dt_valid, modelTarget, modelType = "xgboost", randomS
                             , print_every_n = 50)
       
       ls_model[[modelType]] = model_xgb
+      print(unlist(params))
       
     }
       

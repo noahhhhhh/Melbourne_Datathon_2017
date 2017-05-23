@@ -189,34 +189,16 @@ splitData_year_2016 = function(dt_txn, Target = "General", dt_ilness, splitRatio
   dt_pre_label[, Target := ifelse(Target == T, 1, 0)]
   dt_pre = merge(dt_pre, dt_pre_label, by = "Patient_ID", all.x = T)
   dt_pre[is.na(Target), Target := 0]
-  dt_pre_label = dt_pre[, .(Target = max(Target)), by = Patient_ID]
   
   # split -------------------------------------------------------------------
   
-  dt_test = dt_pre[Patient_ID >= 279201]
-  
-  y_all = dt_pre_label[Patient_ID < 279201]$Target
-  
-  dt_pre[, Target := NULL]
-  
-  splitRatio_train = splitRatio[1]
-  splitRatio_valid = splitRatio[2]
-  
-  # browser()
-  # createDataPartition
-  ind_valid = createDataPartition(y_all, p = splitRatio_valid, list = F)
-  dt_valid_label = dt_pre_label[Patient_ID < 279201][ind_valid]
-  dt_train_label = dt_pre_label[Patient_ID < 279201][-ind_valid]
-  
-  dt_train = merge(dt_pre, dt_train_label, by = "Patient_ID")
-  dt_valid = merge(dt_pre, dt_valid_label, by = "Patient_ID")
+  dt_test = dt_pre[Patient_ID >= 279201 & Patient_ID <= 558352]
+  dt_train = dt_pre[Patient_ID < 279201]
   
   print(paste("dt_train:", dim(dt_train)))
-  print(paste("dt_valid:", dim(dt_valid)))
   print(paste("dt_test:", dim(dt_test)))
   
   return(list(dt_train = dt_train
-              , dt_valid = dt_valid
               , dt_test = dt_test))
   
 }
@@ -263,35 +245,10 @@ splitData_year = function(dt_txn, Target = "General", dt_ilness, splitRatio = NU
     dt_pre_label[, Target := ifelse(Target == T, 1, 0)]
     dt_pre = merge(dt_pre, dt_pre_label, by = "Patient_ID", all.x = T)
     dt_pre[is.na(Target), Target := 0]
-    dt_pre_label = dt_pre[, .(Target = max(Target)), by = Patient_ID]
-    
-    # split -------------------------------------------------------------------
-    
-    y_all = dt_pre_label$Target
-    
-    dt_pre[, Target := NULL]
-    
-    splitRatio_train = splitRatio[1]
-    splitRatio_valid = splitRatio[2]
-    
-    # createDataPartition
-    ind_valid = createDataPartition(y_all, p = splitRatio_valid, list = F)
-    dt_valid_label = dt_pre_label[ind_valid]
-    dt_train_label = dt_pre_label[-ind_valid]
-    
-    dt_train = merge(dt_pre, dt_train_label, by = "Patient_ID")
-    dt_valid = merge(dt_pre, dt_valid_label, by = "Patient_ID")
-    
-    print(paste("dt_train:", dim(dt_train)))
-    print(paste("dt_valid:", dim(dt_valid)))
-    
-    dt_trains = rbind(dt_trains, dt_train)
-    dt_valids = rbind(dt_trains, dt_valid)
-    
+
   }
   
-  return(list(dt_train = dt_train
-              , dt_valid = dt_valid))
+  return(list(dt_train = dt_pre))
   
 }
 
