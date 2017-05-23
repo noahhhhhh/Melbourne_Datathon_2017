@@ -10,13 +10,13 @@ The task is to predict the probability that a patient will be dispensed a drug r
 # Features
 ## Key Features
 - Overall Transition to Diabetes
-  - What drugs would lead to diabetes
+  - What drugs would lead to diabetes [Done]
   - What illnesses would lead to diabetes
-  - What ingredient would lead to diabetes
-- I_Diabetes_Before
+  - What ingredient would lead to diabetes [Done]
+- I_Diabetes_Before [Done]
   - Whether a patient had diabetes drug before 2016 [Done]
-- Drug Association
-  - Sequential Association
+- Drug Association [Done]
+  - Sequential Association [Done]
 - Illness Association
   - Sequential Association
 - Prescriber
@@ -206,5 +206,11 @@ The task is to predict the probability that a patient will be dispensed a drug r
     - lightGBM
     - linear
     - tensorflow NN
-  
-    
+
+# TODO
+  - fix trainEndDate [Done]
+  - Add association [Done]
+  - regenerate data
+  - pca
+  - linear regression
+  - add feature engineering
