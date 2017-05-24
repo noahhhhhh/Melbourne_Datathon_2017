@@ -146,7 +146,7 @@ The task is to predict the probability that a patient will be dispensed a drug r
     - Last_Ingredient [Done]
     - First_Ingredient [Done]
     - Ingredient_CrossEntropy [Done]
-  - Brand
+  - Brand [Done]
 - Patient [Done]
   - Dist_Postcode [Done]
     - mean [Done]
@@ -172,8 +172,9 @@ The task is to predict the probability that a patient will be dispensed a drug r
     - ATC
 # Engineered features
   - Sum_I_Bought_Illness
-  - Diff_Days_till_End_IPI_Txns
-  - Diff_Days_till_End_Illness_IPI_Illness
+  - Exp_Days_till_End_IPI_Txns (exponential distribution)
+  - Exp_Days_till_End_Illness_IPI_Illness (exponential distribution)
+  - Sum_
   - RowSum_0
   - Row
 # Preprocess
