@@ -171,15 +171,15 @@ The task is to predict the probability that a patient will be dispensed a drug r
     - Basic Txns
     - ATC
 # Engineered features
-  - Sum_I_Bought_Illness
-  - Exp_Days_till_End_IPI_Txns (exponential distribution)
-  - Exp_Days_till_End_Illness_IPI_Illness (exponential distribution)
-  - Sum_
+  - Sum_I_Bought_Illness [Done]
+  - Exp_Days_till_End_IPI_Txns (exponential distribution) [Done]
+  - Exp_Days_till_End_Illness_IPI_Illness (exponential distribution) [Done]
+  - RowSum_NAs
   - RowSum_0
   - Row
 # Preprocess
-  - Impute NAs and Infs
-  - Normalisation
+  - Impute NAs and Infs [Done]
+  - Normalisation [Done]
   - Target mean between Categorical Features and Target (remember to avoid overfit)
   
 # Models
