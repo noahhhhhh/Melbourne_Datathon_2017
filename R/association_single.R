@@ -1,3 +1,5 @@
+source("R/load.R")
+
 dt_txn = merge(dt_txn, dt_ilness, by.x = "Drug_ID", by.y = "MasterProductID", all.x = T)
 
 

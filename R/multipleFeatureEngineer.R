@@ -1,3 +1,11 @@
+source("R/load.R", keep.source = T)
+print(paste0("[", Sys.time(), "]: ", "Load ..."))
+
+
+source("R/split.R")
+source("R/featureEngineer.R")
+source("R/preprocess.R")
+source("R/model.R")
 
 # 2016, 3 -----------------------------------------------------------------
 
@@ -466,9 +474,11 @@ rm(dt_train_eng_extra)
 gc()
 
 print("##### Train - ATC Features #####")
-dt_train_eng_atc = featureEngineer_ATC(ls_dt$dt_train, trainEndDate = year, dt_drug, dt_atc)
+dt_train_eng_atc1 = featureEngineer_ATC(ls_dt$dt_train[Patient_ID >= 279201], trainEndDate = year, dt_drug, dt_atc)
+dt_train_eng_atc2 = featureEngineer_ATC(ls_dt$dt_train[Patient_ID < 279201], trainEndDate = year, dt_drug, dt_atc)
+dt_train_eng_atc = rbind(dt_train_eng_atc1, dt_train_eng_atc2)
 saveRDS(dt_train_eng_atc, paste0(path_rds, "dt_train_eng_atc.rds"))
-rm(dt_train_eng_atc)
+rm(dt_train_eng_atc1, dt_train_eng_atc2, dt_train_eng_atc)
 gc()
 
 print("##### Train - Date Features #####")
