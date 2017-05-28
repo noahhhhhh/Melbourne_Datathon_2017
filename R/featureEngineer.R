@@ -1,7 +1,11 @@
 ## TargetMean ##
 featureEngineer_target_mean = function(dt, col){
   
-  dt_col = dt[, .N, by = c("Patient_ID", "Target", col)][, .N, by = c("Target", col)]
+  require(caret)
+  ind_sample = createDataPartition(dt[[col]], p = .7, list = F)
+  dt_copy = copy(dt)
+  dt_copy = dt_copy[ind_sample]
+  dt_col = dt_copy[, .N, by = c("Patient_ID", "Target", col)][, .N, by = c("Target", col)]
   dt_col[, colSum := sum(N), by = col]
   dt_col = dt_col[, targetMean := N / colSum][Target == 1, c(col, "targetMean"), with = F]
   set.seed(888)

@@ -1,4 +1,4 @@
-model = function(dt_train, dt_valid, modelTarget, modelType = "xgboost", randomSearch = F){
+model = function(dt_train, dt_valid, modelTarget, modelType = "xgboost", randomSearch = F, stackedParams = F, gblinear = F){
   
   source("R/utils.R")
   require(Metrics)
@@ -20,20 +20,44 @@ model = function(dt_train, dt_valid, modelTarget, modelType = "xgboost", randomS
                            , label = dt_valid$Target)
     
     if(randomSearch == F){
-      # params
-      params = list(
-        booster = "gbtree"
-        , eta = 0.000425338450889103
-        , max_depth = 14
-        , min_child_weight = 1
-        , subsample = 0.570443930663168
-        , colsample_bytree = 0.676142484601587
-        , colsample_bylevel = 0.838651546183974
-        , gamma = 0.560226952889934
-        , scale_pos_weight = ifelse(modelTarget == "Lapsing", length(dt_train$Target == 0) / length(dt_train$Target == 1), 1)
-        , objective = "binary:logistic"
-        , eval_metric = "auc"
-      )
+      
+      if(stackedParams == F){
+        
+        # params
+        params = list(
+          booster = ifelse(gblinear == F, "gbtree", "gblinear")
+          , eta = 0.01
+          , max_depth = 6
+          , min_child_weight = 5
+          , subsample = 0.7
+          , colsample_bytree = 0.2
+          , colsample_bylevel = 0.2
+          , gamma = 0
+          , scale_pos_weight = ifelse(modelTarget == "Lapsing", length(dt_train$Target == 0) / length(dt_train$Target == 1), 1)
+          , objective = "binary:logistic"
+          , eval_metric = "auc"
+        )
+        
+      }else{
+        
+        params = list(
+          booster = ifelse(gblinear == F, "gbtree", "gblinear")
+          , eta = 0.01
+          , max_depth = 6
+          , min_child_weight = 5
+          , subsample = 0.7
+          , colsample_bytree = 0.5
+          , colsample_bylevel = 0.5
+          , gamma = 0
+          , scale_pos_weight = ifelse(modelTarget == "Lapsing", length(dt_train$Target == 0) / length(dt_train$Target == 1), 1)
+          , objective = "binary:logistic"
+          , eval_metric = "auc"
+        )
+        
+      }
+      
+      
+
       
       # watchlist
       watchlist = list(valid = mx_valid)
@@ -69,10 +93,9 @@ model = function(dt_train, dt_valid, modelTarget, modelType = "xgboost", randomS
       
       ls_score = list()
       
-      for(i in 1:50){
+      for(i in 1:5){
         
         # params
-        set.seed(888)
         params = list(
           booster = "gbtree"
           , eta = runif(1, seq_eta[1], seq_eta[2])
