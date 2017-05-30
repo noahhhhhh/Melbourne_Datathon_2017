@@ -63,6 +63,7 @@ preprocess = function(dt_train, dt_test = NULL, featureEngine = T, impute = T, n
     for(j in cols_ipi){
       
       set(dt, which(is.na(dt[[j]])), j, -1)
+      set(dt, which(is.infinite(dt[[j]])), j, 0)
       
     }
     
